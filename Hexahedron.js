@@ -222,3 +222,4 @@ Hexahedron.prototype.getColorTex = function( drawMode ){
         /*console.log(colors1);
         console.log(colors);
         debugger;*/
+}

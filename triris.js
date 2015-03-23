@@ -120,9 +120,6 @@ window.onload = function init()
     /*gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );*/
 
-    //
-    // CREATE MAP
-    //
     makeGrid();
     makeCube();
     
@@ -187,22 +184,74 @@ var hasWon = false;
 
 function makeCube(){
 
-        var shape = new Shapes();
+        points.push( vec3( -0.25, -0.25, -0.25));
+        points.push(  vec3( 0.25, -0.25, -0.25));
 
-        var cube = new Hexahedron(
-        {
-            drawMode: "line",
-            red: 1.0,
-            blue: 0.0,
-            green: 0.0
-        });
+        points.push( vec3( 0.25, -0.25, -0.25));
+        points.push( vec3( 0.25,-0.25,  0.25));
 
-        shape.insertShape( cube );
-       
-        for( var i=0; i< shape.points.length; i++){
-            points.push( shape.points[i] ); 
-            colors.push( shape.textur[i] ); 
-        }
+        points.push( vec3( 0.25, -0.25,  0.25));
+        points.push( vec3( -0.25, -0.25,  0.25));
+
+        points.push( vec3( -0.25, -0.25, 0.25));
+        points.push( vec3( -0.25, -0.25,  -0.25));
+
+
+
+        points.push( vec3( -0.25, -0.25, -0.25));
+        points.push( vec3( -0.25, 0.25,  -0.25));
+
+        points.push( vec3( 0.25, -0.25, -0.25));
+        points.push( vec3( 0.25, 0.25,  -0.25));
+
+        points.push( vec3( -0.25, -0.25, 0.25));
+        points.push( vec3( -0.25, 0.25,  0.25));
+
+        points.push( vec3( 0.25, -0.25, 0.25));
+        points.push( vec3( 0.25, 0.25,  0.25));
+
+
+        points.push( vec3( -0.25, 0.25, -0.25));
+        points.push(  vec3( 0.25, 0.25, -0.25));
+
+        points.push( vec3( 0.25, 0.25, -0.25));
+        points.push( vec3( 0.25, 0.25,  0.25));
+
+        points.push( vec3( 0.25, 0.25,  0.25));
+        points.push( vec3( -0.25, 0.25,  0.25));
+
+        points.push( vec3( -0.25, 0.25, 0.25));
+        points.push( vec3( -0.25, 0.25, -0.25));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
 }
 
 
@@ -311,7 +360,7 @@ function render()
     
     gl.uniformMatrix4fv(mvLoc, false, flatten(ctm));
 
-    gl.drawArrays( gl.LINES, 0, 24);
+    gl.drawArrays( gl.LINES, 0, 24 );
 
     for(var i = 0; i<kubbar.length; i++){
 
