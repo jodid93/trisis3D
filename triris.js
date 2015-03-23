@@ -41,20 +41,54 @@ function geraKubb( drawArrayIndex ) {
 
 //fall sem sér um að uppfæra alla hlutina í leiknum*/
 function updateSimulation(du) {
-
+    console.log(kubbar.length);
     for(var i = 0; i<kubbar.length; i++){
-        if(kubbar[i].update(du) === 1){
-            /*console.log( shape.t_subinterval );
-            debugger;*/
+        var stateOfBlock = kubbar[i].update(du)
+        if(stateOfBlock === 1){
             var start = vertices.shape.t_subinterval[1].start;
             var count = vertices.shape.t_subinterval[1].count;
             geraKubb( [start,count] );
-        }  
+        }else if(stateOfBlock === -1){
+            kubbar.splice(i,0);
+        }
+    }
+    var flag = true;
+    for(var i = 0; i <22; i++){
+        for(var u = 0; u <6; u++){
+            for(var o = 0; o <6 ; o++){
+                if(playField[u][i][o] === false){
+                    flag = false;
+                }
+            }
+        }
+        if(flag === true){
+
+            clearFloor(i);
+        }
+        flag  = true;
     }
     //console.log(playField[0][3][3]);
 }
 
+function clearFloor(u){
+    for(var i = 0; i<kubbar.length; i++){
+        kubbar[i].landed = false;
+        if(kubbar[i].location1[1] === u){
+            kubbar[i].block1Alive = false;
+            kubbar[i].size--;
+        }
+        if(kubbar[i].location2[1] === u){
+            kubbar[i].block2Alive = false;
+            kubbar[i].size--;
+        }
+        if(kubbar[i].location3[1] === u){
+            kubbar[i].block3Alive = false;
+            kubbar[i].size--;
+        }
 
+          
+    }
+}
 
 var canvas;
 var gl;

@@ -56,7 +56,7 @@ main._iterCore = function (dt) {
     if(eatKey(P)){
         pause = !pause;
     }
-    if (hasWon ) {
+   /* if (hasWon ) {
 
         //þá er keyrður tómur skjár
         blankScreen();
@@ -70,12 +70,14 @@ main._iterCore = function (dt) {
             loa.cy = 256;
         }
         return;
-    }
+    }*/
     
-    if(!pause){
+    if(!pause && !hasWon){
 
         //uppfæri alla logic
         update(dt);
+    }else{
+        console.log('you lost');
     }
 
     //teikna allt
