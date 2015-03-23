@@ -1,24 +1,35 @@
 "use strict"
 
 function Hexahedron( descr ){
+    if (!this instanceof Hexahedron)
+        return new Hexahedron();
+    
+    this.reset();
+    
     for (var property in descr) {
         this[property] = descr[property];
     }
 
-    this.vertices = this.getVertices( this.drawMode );
-    this.colorTex = this.getColorTex( this.drawMode );
+    this.vertices = this.getVertices( );
+    this.t_textures = this.getTexture( );
+    this.l_colors__ = this.getColor( );
 
-    this.build( this.drawMode );
+    this.build( );
 }
 
+//TEXTURE MODE VERTICES
+Hexahedron.prototype.t_points = [];	//keep track of LINE vertices points for Hexahedron
+Hexahedron.prototype.t_textur = [];  //For every three Hexahedron vertices is an texturepart
+Hexahedron.prototype.texturN  =  0;
 
-Hexahedron.prototype.points = [];	//keep track of every vertice points for Hexahedron
-Hexahedron.prototype.textur = [];  //For every three Hexahedron vertices is a one
-									//special color. 
+
+//LINE MODE VERTICES
+Hexahedron.prototype.l_points = [];   //keep track of every vertice points for Hexahedron
+Hexahedron.prototype.l_colors = [];  //For every one Hexahedron vertices is a one special color. 
+Hexahedron.prototype.colorN   =  0;
+
 
 Hexahedron.prototype.size = 0.25;       //Radius size of Hexahedron
-
-Hexahedron.prototype.colorN = 0;
 
 //COLORS
 Hexahedron.prototype.red; 
@@ -26,29 +37,49 @@ Hexahedron.prototype.green;
 Hexahedron.prototype.bue; 
 Hexahedron.prototype.transparent;
 
-Hexahedron.prototype.xAxisLen;
-Hexahedron.prototype.yAxisLen;
-Hexahedron.prototype.zAxisLen;
+//AXIS SIZES
+Hexahedron.prototype.xAxisSize;
+Hexahedron.prototype.yAxisSize;
+Hexahedron.prototype.zAxisSize;
 
+//
 //COORDINATES
+//
 Hexahedron.prototype.vertices;
-Hexahedron.prototype.colorTex;
+//texture mode
+Hexahedron.prototype.t_textures;
+//color mode
+Hexahedron.prototype.l_colors__;
 
-Hexahedron.prototype.drawMode;
 
 //Fastar
-Hexahedron.prototype.LINE     = "line";
-Hexahedron.prototype.TRIANGLE = "tiangle";
+Hexahedron.prototype.LINE     = 1; //gl.LINES
+Hexahedron.prototype.TRIANGLE = 4; //gl.TRIANGLES
 
 
+Hexahedron.prototype.reset = function(){
+    this.vertices   =  0;
+    
+    this.t_points   = [];
+    this.t_textur   = [];
+    this.t_textures =  0;
+    this.textureN   =  0;
 
-Hexahedron.prototype.build = function( drawMode ){
-    if( drawMode === this.LINE ){
-        this.buildLineHexahedron();
-    } else
-    if( drawMode === this.TRIANGLE ){
-        this.buildTriangleHexahedron();
-    }
+    this.l_points   = [];
+    this.l_colors   = [];
+    this.l_colors__ =  0;
+    this.colorN     =  0;
+    
+    this.size     = 0.25;
+    this.xAxisSize = this.size;
+    this.yAxisSize = this.size;
+    this.zAxisSize = this.size;
+}
+
+
+Hexahedron.prototype.build = function( ){
+    this.buildLineHexahedron();
+    this.buildTriangleHexahedron();
 }
 
 
@@ -70,16 +101,18 @@ Hexahedron.prototype.line = function(a,b){
 Hexahedron.prototype.square = function(a,b,c,d){
     var indices = [ a, b, b, c, c, d, d, a ];
     this.insert( indices );
-}
+};
 
 
 Hexahedron.prototype.insert = function( indices ){
+
     for ( var i = 0; i < indices.length; ++i ) {
-        this.points.push( this.vertices[ indices[i] ]);
-        this.textur.push( this.colorTex[ this.colorN]);
+        this.l_points.push( this.vertices[ indices[i] ]);
+        this.l_colors.push( this.l_colors__[ this.colorN]);
     }
+
     this.colorN;
-}
+};
 
                       
 Hexahedron.prototype.buildTriangleHexahedron = function(){
@@ -96,36 +129,32 @@ Hexahedron.prototype.buildTriangleHexahedron = function(){
 
 Hexahedron.prototype.quad = function(a, b, c, d) 
 {
-    var k = this.size; 
-
     //vertex texture coordinates assigned by the index of the vertex
     var indices = [ a, b, c, a, c, d ];
     var texind  = [ 1, 0, 3, 1, 3, 2 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
-        this.points.push( this.vertices[indices[i]] );
-        this.textur.push( this.colorTex[texind [i]] );
+        this.t_points.push( this.vertices[indices[i]] );
+        this.t_textur.push( this.t_textures[texind [i]] );
     }
-    this.colorN++;
-}
+    this.texturN++; //gerir ekki neitt
+};
 
 
-Hexahedron.prototype.getVertices = function( drawMode ){
-    var x = this.xAxisLen;
-    var y = this.yAxisLen;
-    var z = this.zAxisLen;
+Hexahedron.prototype.getVertices = function(  ){
+    var x = this.xAxisSize;
+    var y = this.yAxisSize;
+    var z = this.zAxisSize;
     
-    if(drawMode === this.LINE || drawMode == this.TRIANGLE){
-        return [vec3( -x, -y,  z ),   //0
-                vec3( -x,  y,  z ),   //1
-                vec3(  x,  y,  z ),   //2
-                vec3(  x, -y,  z ),   //3
-                vec3( -x, -y, -z ),   //4
-                vec3( -x,  y, -z ),   //5
-                vec3(  x,  y, -z ),   //6
-                vec3(  x, -y, -z )];  //7
-    }
-}
+    return [vec3( -x, -y,  z ),   //0
+            vec3( -x,  y,  z ),   //1
+            vec3(  x,  y,  z ),   //2
+            vec3(  x, -y,  z ),   //3
+            vec3( -x, -y, -z ),   //4
+            vec3( -x,  y, -z ),   //5
+            vec3(  x,  y, -z ),   //6
+            vec3(  x, -y, -z )];  //7
+};
 
 Hexahedron.prototype.getColorTex = function( drawMode ){
     
@@ -140,6 +169,29 @@ Hexahedron.prototype.getColorTex = function( drawMode ){
             vec2(1, 1), vec2(1, 0)];
     }
 };
+
+//return a color red
+Hexahedron.prototype.getColor = function( ){    
+    return [vec3(this.red, this.blue, this.green) ];
+};
+
+
+//return a texture coordinate of a square
+Hexahedron.prototype.getTexture = function( ){    
+    return [vec2(0, 0), vec2(0, 1),
+            vec2(1, 1), vec2(1, 0)];
+};
+
+
+
+
+
+
+
+
+
+
+
 
 /*BÚA TIL KASS MEÐ ALLAR HLIÐAR sdlfjkl kknmmmmnhjhjhghg!!!
 
@@ -299,3 +351,4 @@ Hexahedron.prototype.getColorTex = function( drawMode ){
         colors.push( vec3(1.0 , 0.0, 0.0));
         colors.push( vec3(1.0 , 0.0, 0.0));
         colors.push( vec3(1.0 , 0.0, 0.0));*/
+

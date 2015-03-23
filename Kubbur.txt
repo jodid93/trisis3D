@@ -3,6 +3,8 @@ function Kubbur(descr) {
     for (var property in descr) {
         this[property] = descr[property];
     }
+
+    //this.location = [];
 }
 
 // Initial, inheritable, default values
@@ -10,15 +12,12 @@ Kubbur.prototype.size;
 Kubbur.prototype.location1;
 Kubbur.prototype.location2;
 Kubbur.prototype.location3;
-Kubbur.prototype.arrayIndex;
 Kubbur.prototype.time = 0;
 Kubbur.prototype.landed = false;
 Kubbur.prototype.signal = 0;
 Kubbur.prototype.active = true;
 Kubbur.prototype.type;
 Kubbur.prototype.state = 1;
-
-//CONSTANT
 
 //fall til að uppfæra kubba
 Kubbur.prototype.update = function (du) {
@@ -740,7 +739,8 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         z = 1.25 - this.location1[2] * 0.5;
         ctm1 = mult( ctm, translate( x, y, z ) );
         gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));
-        this.draw();
+        
+        gl.drawArrays( gl.LINES, 24, 24 );
     }
 
     if(this.location2[1] > 1){
@@ -749,8 +749,9 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         y = 5.75 - this.location2[1] * 0.5;
         z = 1.25 - this.location2[2] * 0.5;
         ctm1 = mult( ctm, translate( x, y, z ) );
-        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));        
-        this.draw();
+        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));
+        
+        gl.drawArrays( gl.LINES, 24, 24 );
     }
 
     if(this.location3[1]>1){
@@ -758,14 +759,10 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         x = 1.25 - this.location3[0] * 0.5;
         y = 5.75 - this.location3[1] * 0.5;
         z = 1.25 - this.location3[2] * 0.5;
+
         ctm1 = mult( ctm, translate( x, y, z ) );
-        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));        
-        this.draw();
+        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));
+        
+        gl.drawArrays( gl.LINES, 24, 24 );
     }
 }
-
-Kubbur.prototype.draw = function(){
-    var start = this.arrayIndex[0];
-    var count = this.arrayIndex[1];
-    gl.drawArrays(drawMode, start, count);
-};
