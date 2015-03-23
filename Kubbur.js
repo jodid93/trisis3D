@@ -3,6 +3,8 @@ function Kubbur(descr) {
     for (var property in descr) {
         this[property] = descr[property];
     }
+
+    this.location = [];
 }
 
 // Initial, inheritable, default values
@@ -757,6 +759,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         x = 1.25 - this.location3[0] * 0.5;
         y = 5.75 - this.location3[1] * 0.5;
         z = 1.25 - this.location3[2] * 0.5;
+
         ctm1 = mult( ctm, translate( x, y, z ) );
         gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));
         
