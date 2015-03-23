@@ -16,10 +16,17 @@ Kubbur.prototype.signal = 0;
 Kubbur.prototype.active = true;
 Kubbur.prototype.type;
 Kubbur.prototype.state = 1;
+Kubbur.prototype.block1Alive = true;
+Kubbur.prototype.block2Alive = true;
+Kubbur.prototype.block3Alive = true;
 
 //fall til að uppfæra kubba
 Kubbur.prototype.update = function (du) {
     
+    //kill me now value
+    if(this.size <= 0){
+        return -1;
+    }
     this.time += du;
 
 
@@ -691,15 +698,32 @@ Kubbur.prototype.update = function (du) {
     if(this.time > time && !this.landed){
         this.time = 0;
 
-        flag2 = true;
-        this.location1[1]++;
-        this.location2[1]++;
-        this.location3[1]++;
+        if(this.block1Alive){
+
+            this.location1[1]++;
+        }
+        if(this.block2Alive){
+
+            this.location2[1]++;
+        }
+        if(this.block3Alive){
+
+            this.location3[1]++;
+        }
     }
 
-    playField[this.location1[0]][this.location1[1]][this.location1[2]] = true;
-    playField[this.location2[0]][this.location2[1]][this.location2[2]] = true;
-    playField[this.location3[0]][this.location3[1]][this.location3[2]] = true;
+    if(this.block1Alive){
+
+        playField[this.location1[0]][this.location1[1]][this.location1[2]] = true;
+    }
+    if(this.block2Alive){
+
+        playField[this.location2[0]][this.location2[1]][this.location2[2]] = true;
+    }
+    if(this.block3Alive){
+
+        playField[this.location3[0]][this.location3[1]][this.location3[2]] = true;
+    }
 
     
     return this.signal;
@@ -710,27 +734,39 @@ Kubbur.prototype.update = function (du) {
 
 Kubbur.prototype.checkBottom = function(){
     
-    if(this.location1[1]+1 > 21 || playField[this.location1[0]][this.location1[1]+1][this.location1[2]] == true){
+    if((this.location1[1]+1 > 21 || playField[this.location1[0]][this.location1[1]+1][this.location1[2]] == true)&&this.block1Alive){
         this.signal++;
         this.landed = true;
         this.active = false;
+        if(this.location1[1]<3){
+            hasWon = true;
+            this.signal++;
+        }
     }
-    else if(this.location2[1]+1 > 21 || playField[this.location2[0]][this.location2[1]+1][this.location2[2]] == true){
+    else if((this.location2[1]+1 > 21 || playField[this.location2[0]][this.location2[1]+1][this.location2[2]] == true)&&this.block2Alive){
         this.signal++;
         this.landed = true;
         this.active = false;
+        if(this.location2[1]<3){
+            hasWon = true;
+            this.signal++;
+        }
     }
-    else if(this.location3[1]+1 > 21 || playField[this.location3[0]][this.location3[1]+1][this.location3[2]] == true){
+    else if((this.location3[1]+1 > 21 || playField[this.location3[0]][this.location3[1]+1][this.location3[2]] == true)&&this.block3Alive){
         this.signal++;
         this.landed = true;
         this.active = false;
+        if(this.location2[1]<3){
+                hasWon = true;
+                this.signal++;
+        }
     }
 }
 
 
 Kubbur.prototype.render = function(ctm,matrixLoc){
 
-    if(this.location1[1]>1){
+    if(this.location1[1]>1&&this.block1Alive){
 
         x = 1.25 - this.location1[0] * 0.5;
         y = 5.75 - this.location1[1] * 0.5;
@@ -741,7 +777,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         gl.drawArrays( gl.LINES, 24, 24 );
     }
 
-    if(this.location2[1] > 1){
+    if(this.location2[1] > 1&&this.block2Alive){
 
         x = 1.25 - this.location2[0] * 0.5;
         y = 5.75 - this.location2[1] * 0.5;
@@ -752,7 +788,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         gl.drawArrays( gl.LINES, 24, 24 );
     }
 
-    if(this.location3[1]>1){
+    if(this.location3[1]>1&&this.block3Alive){
 
         x = 1.25 - this.location3[0] * 0.5;
         y = 5.75 - this.location3[1] * 0.5;
