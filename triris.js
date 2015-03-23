@@ -1,3 +1,5 @@
+"use strict"
+
 ////////////////////////////////////////////////////////////////////////////
 //              RENDER
 ////////////////////////////////////////////////////////////////////////////
@@ -54,6 +56,7 @@ var gl;
 
 var NumVertices  = 24;
 
+//var shape  = [];
 var points = [];
 var colors = [];
 
@@ -123,8 +126,10 @@ window.onload = function init()
     //
     // CREATE MAP
     //
+   // shape = new Shapes();
     makeGrid();
     makeCube();
+    //pushShapePoints();
     
     var cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
@@ -187,42 +192,95 @@ var hasWon = false;
 
 function makeCube(){
 
-        var shape = new Shapes();
-
+/*
         var cube = new Hexahedron(
         {
             drawMode: "line",
             red: 1.0,
             blue: 0.0,
-            green: 0.0
+            green: 0.0,
+            xAxisLen: 0.25,
+            yAxisLen: 0.25,
+            zAxisLen: 0.25
         });
 
         shape.insertShape( cube );
-       
-        for( var i=0; i< shape.points.length; i++){
-            points.push( shape.points[i] ); 
-            colors.push( shape.textur[i] ); 
-        }
+
+        */
+        points.push( vec3( -0.25, -0.25, -0.25));
+        points.push(  vec3( 0.25, -0.25, -0.25));
+
+        points.push( vec3( 0.25, -0.25, -0.25));
+        points.push( vec3( 0.25,-0.25,  0.25));
+
+        points.push( vec3( 0.25, -0.25,  0.25));
+        points.push( vec3( -0.25, -0.25,  0.25));
+
+        points.push( vec3( -0.25, -0.25, 0.25));
+        points.push( vec3( -0.25, -0.25,  -0.25));
+
+
+
+        points.push( vec3( -0.25, -0.25, -0.25));
+        points.push( vec3( -0.25, 0.25,  -0.25));
+
+        points.push( vec3( 0.25, -0.25, -0.25));
+        points.push( vec3( 0.25, 0.25,  -0.25));
+
+        points.push( vec3( -0.25, -0.25, 0.25));
+        points.push( vec3( -0.25, 0.25,  0.25));
+
+        points.push( vec3( 0.25, -0.25, 0.25));
+        points.push( vec3( 0.25, 0.25,  0.25));
+
+
+        points.push( vec3( -0.25, 0.25, -0.25));
+        points.push(  vec3( 0.25, 0.25, -0.25));
+
+        points.push( vec3( 0.25, 0.25, -0.25));
+        points.push( vec3( 0.25, 0.25,  0.25));
+
+        points.push( vec3( 0.25, 0.25,  0.25));
+        points.push( vec3( -0.25, 0.25,  0.25));
+
+        points.push( vec3( -0.25, 0.25, 0.25));
+        points.push( vec3( -0.25, 0.25, -0.25));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
 }
 
 
 function makeGrid(){
 
-        points.push( vec3(-1.5, -5.0, -1.5));
-        points.push(  vec3( 1.5, -5.0, -1.5));
-
-        points.push( vec3( 1.5, -5.0, -1.5));
-        points.push( vec3( 1.5, -5.0,  1.5));
-
-        points.push( vec3( 1.5, -5.0,  1.5));
-        points.push( vec3( -1.5, -5.0,  1.5));
-
-        points.push( vec3( -1.5, -5.0, 1.5));
-        points.push( vec3( -1.5, -5.0,  -1.5));
-
-
-
-        points.push( vec3( -1.5, -5.0, -1.5));
+         points.push( vec3( -1.5, -5.0, -1.5));
         points.push( vec3( -1.5, 5.0,  -1.5));
 
         points.push( vec3( 1.5, -5.0, -1.5));
@@ -276,7 +334,28 @@ function makeGrid(){
         colors.push( vec3(1.0 , 0.0, 0.0));
         colors.push( vec3(1.0 , 0.0, 0.0));
         colors.push( vec3(1.0 , 0.0, 0.0));
+
+    /*var box = new Hexahedron({
+        drawMode: "line",
+        red: 1.0,
+        blue: 0.0,
+        green: 0.0,
+        xAxisLen: 1.5,
+        yAxisLen: 5.0,
+        zAxisLen: 1.5
+    })
+
+    shape.insertShape( box );*/
 }
+/*
+function pushShapePoints(  ){
+    for( var i=0; i< shape.points.length; i++){
+        points.push( shape.points[i] ); 
+        colors.push( shape.textur[i] ); 
+    }
+}*/
+
+
 //----------------------------------------------------------------------------
 // Define the transformation scale here (two scale functions in MV.js)
 function scale4( x, y, z )

@@ -26,6 +26,10 @@ Hexahedron.prototype.green;
 Hexahedron.prototype.bue; 
 Hexahedron.prototype.transparent;
 
+Hexahedron.prototype.xAxisLen;
+Hexahedron.prototype.yAxisLen;
+Hexahedron.prototype.zAxisLen;
+
 //COORDINATES
 Hexahedron.prototype.vertices;
 Hexahedron.prototype.colorTex;
@@ -135,6 +139,7 @@ Hexahedron.prototype.getColorTex = function( drawMode ){
     return [vec2(0, 0), vec2(0, 1),
             vec2(1, 1), vec2(1, 0)];
     }
+};
 
 /*BÚA TIL KASS MEÐ ALLAR HLIÐAR sdlfjkl kknmmmmnhjhjhghg!!!
 
@@ -222,3 +227,75 @@ Hexahedron.prototype.getColorTex = function( drawMode ){
         /*console.log(colors1);
         console.log(colors);
         debugger;*/
+
+
+
+
+        /*points.push( vec3(-1.5, -5.0, -1.5));
+        points.push(  vec3( 1.5, -5.0, -1.5));
+
+        points.push( vec3( 1.5, -5.0, -1.5));
+        points.push( vec3( 1.5, -5.0,  1.5));
+
+        points.push( vec3( 1.5, -5.0,  1.5));
+        points.push( vec3( -1.5, -5.0,  1.5));
+
+        points.push( vec3( -1.5, -5.0, 1.5));
+        points.push( vec3( -1.5, -5.0,  -1.5));
+
+
+
+        points.push( vec3( -1.5, -5.0, -1.5));
+        points.push( vec3( -1.5, 5.0,  -1.5));
+
+        points.push( vec3( 1.5, -5.0, -1.5));
+        points.push( vec3( 1.5, 5.0,  -1.5));
+
+        points.push( vec3( -1.5, -5.0, 1.5));
+        points.push( vec3( -1.5, 5.0,  1.5));
+
+        points.push( vec3( 1.5, -5.0, 1.5));
+        points.push( vec3( 1.5, 5.0,  1.5));
+
+
+        points.push( vec3(-1.5, 5.0, -1.5));
+        points.push(  vec3( 1.5, 5.0, -1.5));
+
+        points.push( vec3( 1.5, 5.0, -1.5));
+        points.push( vec3( 1.5, 5.0,  1.5));
+
+        points.push( vec3( 1.5, 5.0,  1.5));
+        points.push( vec3( -1.5, 5.0,  1.5));
+
+        points.push( vec3( -1.5, 5.0, 1.5));
+        points.push( vec3( -1.5, 5.0,  -1.5));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+    
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));
+        colors.push( vec3(1.0 , 0.0, 0.0));*/

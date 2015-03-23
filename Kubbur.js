@@ -4,7 +4,7 @@ function Kubbur(descr) {
         this[property] = descr[property];
     }
 
-    this.location = [];
+    //this.location = [];
 }
 
 // Initial, inheritable, default values
