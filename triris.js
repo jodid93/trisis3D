@@ -12,6 +12,8 @@
 var playField;
 //hér eru allir kubbar geymdir
 var kubbar = [];
+var score = 0;
+var level = 1;
 
 //function til að initialize-a nýjan orm
 function geraKubb( drawArrayIndex ) {
@@ -57,6 +59,7 @@ function updateSimulation(du) {
            
             kubbar.splice(i,1);
             i--;
+            
         }
     }
     
@@ -75,8 +78,13 @@ function checkForFumble(du){
             }
         }
         if(flag === true){
+           
             index = i;
             clearFloor(i,du);
+            score += 10;
+            if((score%10) === 0){
+                level++;
+            }
         }
         flag  = true;
     }
@@ -89,7 +97,7 @@ function clearFloor(u,du){
         playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = false;
         playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = false;
 
-        if(kubbar[i].location1[1] === u){
+        if(kubbar[i].location1[1] === u && kubbar[i].block1Alive){
             kubbar[i].block1Alive = false;
             
             kubbar[i].size--;
@@ -97,7 +105,7 @@ function clearFloor(u,du){
             kubbar[i].location1[1]++;
         }
 
-        if(kubbar[i].location2[1] === u){
+        if(kubbar[i].location2[1] === u && kubbar[i].block2Alive){
             kubbar[i].block2Alive = false;
             
             kubbar[i].size--;
@@ -105,16 +113,14 @@ function clearFloor(u,du){
             kubbar[i].location2[1]++;
         }
 
-        if(kubbar[i].location3[1] === u){
+        if(kubbar[i].location3[1] === u && kubbar[i].block3Alive){
             kubbar[i].block3Alive = false;
             
             kubbar[i].size--;
         }else if(kubbar[i].location3[1] < u){
             kubbar[i].location3[1]++;
         }
-
-        console.log('updateing cube');
-          
+        console.log(kubbar[0]);
     }
     for(var i = 0; i<kubbar.length; i++){
         if(kubbar[i].block1Alive){
