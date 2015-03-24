@@ -48,10 +48,10 @@ function updateSimulation(du) {
         
         if(stateOfBlock === 1){
 
+            checkForFumble(du);
             var start = vertices.cubeIndex.start;
             var count = vertices.cubeIndex.count;
             geraKubb( [start,count] );
-            checkForFumble(du);
 
         }else if(stateOfBlock === -1){
            
@@ -85,25 +85,51 @@ function checkForFumble(du){
 function clearFloor(u,du){
     for(var i = 0; i<kubbar.length; i++){
         kubbar[i].landed = false;
+        playField[kubbar[i].location1[0]][kubbar[i].location1[1]][kubbar[i].location1[2]] = false;
+        playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = false;
+        playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = false;
+
         if(kubbar[i].location1[1] === u){
             kubbar[i].block1Alive = false;
-            playField[kubbar[i].location1[0]][kubbar[i].location1[1]][kubbar[i].location1[2]] = false;
+            
             kubbar[i].size--;
+        }else if(kubbar[i].location1[1] < u){
+            kubbar[i].location1[1]++;
         }
+
         if(kubbar[i].location2[1] === u){
             kubbar[i].block2Alive = false;
-            playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = false;
+            
             kubbar[i].size--;
+        }else if(kubbar[i].location2[1] < u){
+            kubbar[i].location2[1]++;
         }
+
         if(kubbar[i].location3[1] === u){
             kubbar[i].block3Alive = false;
-            playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = false;
+            
             kubbar[i].size--;
+        }else if(kubbar[i].location3[1] < u){
+            kubbar[i].location3[1]++;
         }
-        kubbar[i].update(du);
+
+        console.log('updateing cube');
           
     }
+    for(var i = 0; i<kubbar.length; i++){
+        if(kubbar[i].block1Alive){
+
+            playField[kubbar[i].location1[0]][kubbar[i].location1[1]][kubbar[i].location1[2]] = true;
+        }
+        if(kubbar[i].block2Alive){
+            playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = true;
+        }
+        if(kubbar[i].block3Alive){
+            playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = true;
+        }
+    }
 }
+
 
 var canvas;
 var gl;

@@ -32,7 +32,7 @@ Kubbur.prototype.update = function (du) {
     }
     this.time += du;
 
-
+    console.log('checking')
     playField[this.location1[0]][this.location1[1]][this.location1[2]] = false;
     playField[this.location2[0]][this.location2[1]][this.location2[2]] = false;
     playField[this.location3[0]][this.location3[1]][this.location3[2]] = false;
@@ -333,8 +333,8 @@ Kubbur.prototype.update = function (du) {
                 }
                 else if(this.state === 5){
                     console.log("case 5, type 2, S");
-                    if( this.location2[0]-1 >= 0 &&
-                        playField[this.location2[0]-1][this.location2[1]][this.location2[2]] === false){
+                    if(
+                        playField[this.location2[0]+1][this.location2[1]][this.location2[2]-1] === false){
 
                         this.location1[0]--;
                         this.location2[0]++;
