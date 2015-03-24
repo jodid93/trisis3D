@@ -48,8 +48,8 @@ function updateSimulation(du) {
         
         if(stateOfBlock === 1){
 
-            var start = vertices.shape.t_subinterval[1].start;
-            var count = vertices.shape.t_subinterval[1].count;
+            var start = vertices.cubeIndex.start;
+            var count = vertices.cubeIndex.count;
             geraKubb( [start,count] );
             checkForFumble(du);
 
