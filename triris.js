@@ -1,3 +1,5 @@
+"use strict"
+
 ////////////////////////////////////////////////////////////////////////////
 //              RENDER
 ////////////////////////////////////////////////////////////////////////////
@@ -12,24 +14,25 @@ var playField;
 var kubbar = [];
 
 //function til að initialize-a nýjan orm
-function geraKubb() {
+function geraKubb( drawArrayIndex ) {
     if(Math.random()>0.5){
 
         kubbar.push(new Kubbur({
+                type: 1,
                 size: 3,
                 location1: [3,0,3],
                 location2: [3,1,3],
                 location3: [3,2,3],
-                type: 1
-
-            }));
+                arrayIndex: drawArrayIndex
+            }));    
     }else{
         kubbar.push(new Kubbur({
+                type: 2,
                 size: 3,
                 location1: [2,1,3],
                 location2: [3,1,3],
                 location3: [3,2,3],
-                type: 2
+                arrayIndex: drawArrayIndex
             }));
     }
 };
@@ -44,8 +47,12 @@ function updateSimulation(du) {
         var stateOfBlock = kubbar[i].update(du)
         
         if(stateOfBlock === 1){
+
+            var start = vertices.shape.t_subinterval[1].start;
+            var count = vertices.shape.t_subinterval[1].count;
+            geraKubb( [start,count] );
             checkForFumble(du);
-            geraKubb();
+
         }else if(stateOfBlock === -1){
            
             kubbar.splice(i,1);
@@ -103,8 +110,11 @@ var gl;
 
 var NumVertices  = 24;
 
+var shape  = [];
 var points = [];
 var colors = [];
+
+var drawMode;
 
 var xAxis = 0;
 var yAxis = 1;
@@ -118,6 +128,11 @@ var spinX = 0;
 var spinY = 0;
 var origX;
 var origY;
+
+//TÍMABUNDIÐ:
+var cBuffer;
+var kassi;
+
 
 var zDist = -4.0;
 
@@ -169,10 +184,21 @@ window.onload = function init()
     /*gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );*/
 
-    makeGrid();
-    makeCube();
-    
-    var cBuffer = gl.createBuffer();
+    //
+    // SELECT DRAW MODE
+    //
+    drawMode = gl.LINES;
+    //drawMode = gl.TRIANGLES;
+
+    //
+    // CREATE MAP
+    //
+    vertices.build();
+
+    //
+    // INITIALIZE BUFFERS
+    //
+    cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
 
@@ -191,6 +217,10 @@ window.onload = function init()
     proLoc = gl.getUniformLocation( program, "projection" );
     mvLoc = gl.getUniformLocation( program, "modelview" );
 
+    
+    //
+    // INITIALIZE LISTENERS
+    //
     //event listeners for mouse
     canvas.addEventListener("mousedown", function(e){
         movement = true;
@@ -223,7 +253,7 @@ window.onload = function init()
          }
      }  );  
 
-    geraKubb();
+    geraKubb( [24,24], drawMode);
 }
 
 
@@ -231,150 +261,7 @@ window.onload = function init()
 //breytur sem hjálpa við stjórn leiksins
 var hasWon = false;
 
-function makeCube(){
 
-        points.push( vec3( -0.25, -0.25, -0.25));
-        points.push(  vec3( 0.25, -0.25, -0.25));
-
-        points.push( vec3( 0.25, -0.25, -0.25));
-        points.push( vec3( 0.25,-0.25,  0.25));
-
-        points.push( vec3( 0.25, -0.25,  0.25));
-        points.push( vec3( -0.25, -0.25,  0.25));
-
-        points.push( vec3( -0.25, -0.25, 0.25));
-        points.push( vec3( -0.25, -0.25,  -0.25));
-
-
-
-        points.push( vec3( -0.25, -0.25, -0.25));
-        points.push( vec3( -0.25, 0.25,  -0.25));
-
-        points.push( vec3( 0.25, -0.25, -0.25));
-        points.push( vec3( 0.25, 0.25,  -0.25));
-
-        points.push( vec3( -0.25, -0.25, 0.25));
-        points.push( vec3( -0.25, 0.25,  0.25));
-
-        points.push( vec3( 0.25, -0.25, 0.25));
-        points.push( vec3( 0.25, 0.25,  0.25));
-
-
-        points.push( vec3( -0.25, 0.25, -0.25));
-        points.push(  vec3( 0.25, 0.25, -0.25));
-
-        points.push( vec3( 0.25, 0.25, -0.25));
-        points.push( vec3( 0.25, 0.25,  0.25));
-
-        points.push( vec3( 0.25, 0.25,  0.25));
-        points.push( vec3( -0.25, 0.25,  0.25));
-
-        points.push( vec3( -0.25, 0.25, 0.25));
-        points.push( vec3( -0.25, 0.25, -0.25));
-
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-}
-
-
-function makeGrid(){
-
-        points.push( vec3(-1.5, -5.0, -1.5));
-        points.push(  vec3( 1.5, -5.0, -1.5));
-
-        points.push( vec3( 1.5, -5.0, -1.5));
-        points.push( vec3( 1.5, -5.0,  1.5));
-
-        points.push( vec3( 1.5, -5.0,  1.5));
-        points.push( vec3( -1.5, -5.0,  1.5));
-
-        points.push( vec3( -1.5, -5.0, 1.5));
-        points.push( vec3( -1.5, -5.0,  -1.5));
-
-
-
-        points.push( vec3( -1.5, -5.0, -1.5));
-        points.push( vec3( -1.5, 5.0,  -1.5));
-
-        points.push( vec3( 1.5, -5.0, -1.5));
-        points.push( vec3( 1.5, 5.0,  -1.5));
-
-        points.push( vec3( -1.5, -5.0, 1.5));
-        points.push( vec3( -1.5, 5.0,  1.5));
-
-        points.push( vec3( 1.5, -5.0, 1.5));
-        points.push( vec3( 1.5, 5.0,  1.5));
-
-
-        points.push( vec3(-1.5, 5.0, -1.5));
-        points.push(  vec3( 1.5, 5.0, -1.5));
-
-        points.push( vec3( 1.5, 5.0, -1.5));
-        points.push( vec3( 1.5, 5.0,  1.5));
-
-        points.push( vec3( 1.5, 5.0,  1.5));
-        points.push( vec3( -1.5, 5.0,  1.5));
-
-        points.push( vec3( -1.5, 5.0, 1.5));
-        points.push( vec3( -1.5, 5.0,  -1.5));
-
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-    
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-        colors.push( vec3(1.0 , 0.0, 0.0));
-}
 //----------------------------------------------------------------------------
 // Define the transformation scale here (two scale functions in MV.js)
 function scale4( x, y, z )
@@ -399,6 +286,8 @@ function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    var ctmStack = [];
+
     var proj = perspective( 50.0, 1.0, 0.2, 100.0 );
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
@@ -407,14 +296,19 @@ function render()
     ctm = mult( ctm, rotate( parseFloat(spinY), [0, 1, 0] ) );
     ctm = mult( ctm, scale4(0.3,0.3,0.3));
     
-    gl.uniformMatrix4fv(mvLoc, false, flatten(ctm));
+    //RENDER GRID
+    ctmStack.push( ctm );
+        vertices.renderGrid(ctm, mvLoc);
+    ctm = ctmStack.pop();
+    
+    
+    //RENDER EARTH
+    ctmStack.push( ctm );
+        vertices.renderGround(ctm, mvLoc);
+    ctm = ctmStack.pop();
 
-    gl.drawArrays( gl.LINES, 0, 24 );
-
+    //RENDER CUBES
     for(var i = 0; i<kubbar.length; i++){
-
         kubbar[i].render(ctm, mvLoc);
     }
-
 }
-

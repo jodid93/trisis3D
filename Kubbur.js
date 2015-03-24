@@ -10,6 +10,7 @@ Kubbur.prototype.size;
 Kubbur.prototype.location1;
 Kubbur.prototype.location2;
 Kubbur.prototype.location3;
+Kubbur.prototype.arrayIndex;
 Kubbur.prototype.time = 0;
 Kubbur.prototype.landed = false;
 Kubbur.prototype.signal = 0;
@@ -19,6 +20,8 @@ Kubbur.prototype.state = 1;
 Kubbur.prototype.block1Alive = true;
 Kubbur.prototype.block2Alive = true;
 Kubbur.prototype.block3Alive = true;
+
+//CONSTANT
 
 //fall til að uppfæra kubba
 Kubbur.prototype.update = function (du) {
@@ -777,8 +780,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         z = 1.25 - this.location1[2] * 0.5;
         ctm1 = mult( ctm, translate( x, y, z ) );
         gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));
-        
-        gl.drawArrays( gl.LINES, 24, 24 );
+        this.draw();
     }
 
     if(this.location2[1] > 1&&this.block2Alive){
@@ -787,9 +789,8 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         y = 5.75 - this.location2[1] * 0.5;
         z = 1.25 - this.location2[2] * 0.5;
         ctm1 = mult( ctm, translate( x, y, z ) );
-        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));
-        
-        gl.drawArrays( gl.LINES, 24, 24 );
+        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));        
+        this.draw();
     }
 
     if(this.location3[1]>1&&this.block3Alive){
@@ -798,8 +799,13 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         y = 5.75 - this.location3[1] * 0.5;
         z = 1.25 - this.location3[2] * 0.5;
         ctm1 = mult( ctm, translate( x, y, z ) );
-        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));
-        
-        gl.drawArrays( gl.LINES, 24, 24 );
+        gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));        
+        this.draw();
     }
 }
+
+Kubbur.prototype.draw = function(){
+    var start = this.arrayIndex[0];
+    var count = this.arrayIndex[1];
+    gl.drawArrays(drawMode, start, count);
+};
