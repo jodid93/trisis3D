@@ -38,16 +38,27 @@ function geraKubb() {
 
 //fall sem sér um að uppfæra alla hlutina í leiknum*/
 function updateSimulation(du) {
-    console.log(kubbar.length);
+    var flow = false;
+   
     for(var i = 0; i<kubbar.length; i++){
         var stateOfBlock = kubbar[i].update(du)
+        
         if(stateOfBlock === 1){
+            checkForFumble(du);
             geraKubb();
         }else if(stateOfBlock === -1){
-            kubbar.splice(i,0);
+           
+            kubbar.splice(i,1);
+            i--;
         }
     }
+    
+    //console.log(playField[0][3][3]);
+}
+
+function checkForFumble(du){
     var flag = true;
+    var index = 0;
     for(var i = 0; i <22; i++){
         for(var u = 0; u <6; u++){
             for(var o = 0; o <6 ; o++){
@@ -57,30 +68,32 @@ function updateSimulation(du) {
             }
         }
         if(flag === true){
-
-            clearFloor(i);
+            index = i;
+            clearFloor(i,du);
         }
         flag  = true;
     }
-    //console.log(playField[0][3][3]);
 }
 
-function clearFloor(u){
+function clearFloor(u,du){
     for(var i = 0; i<kubbar.length; i++){
         kubbar[i].landed = false;
         if(kubbar[i].location1[1] === u){
             kubbar[i].block1Alive = false;
+            playField[kubbar[i].location1[0]][kubbar[i].location1[1]][kubbar[i].location1[2]] = false;
             kubbar[i].size--;
         }
         if(kubbar[i].location2[1] === u){
             kubbar[i].block2Alive = false;
+            playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = false;
             kubbar[i].size--;
         }
         if(kubbar[i].location3[1] === u){
             kubbar[i].block3Alive = false;
+            playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = false;
             kubbar[i].size--;
         }
-
+        kubbar[i].update(du);
           
     }
 }
