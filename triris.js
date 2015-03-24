@@ -12,6 +12,8 @@
 var playField;
 //hér eru allir kubbar geymdir
 var kubbar = [];
+var score = 0;
+var level = 1;
 
 //function til að initialize-a nýjan orm
 function geraKubb( drawArrayIndex ) {
@@ -40,18 +42,34 @@ function geraKubb( drawArrayIndex ) {
 
 //fall sem sér um að uppfæra alla hlutina í leiknum*/
 function updateSimulation(du) {
-    console.log(kubbar.length);
+    var flow = false;
+   
     for(var i = 0; i<kubbar.length; i++){
         var stateOfBlock = kubbar[i].update(du)
+        
         if(stateOfBlock === 1){
+
+            checkForFumble(du);
             var start = vertices.cubeIndex.start;
             var count = vertices.cubeIndex.count;
             geraKubb( [start,count] );
+
         }else if(stateOfBlock === -1){
-            kubbar.splice(i,0);
+           
+            kubbar.splice(i,1);
+            i--;
+            
         }
     }
+    if(  eatKey(G) ){
+        gridPoints = !gridPoints;
+    }
+    //console.log(playField[0][3][3]);
+}
+
+function checkForFumble(du){
     var flag = true;
+    var index = 0;
     for(var i = 0; i <22; i++){
         for(var u = 0; u <6; u++){
             for(var o = 0; o <6 ; o++){
@@ -61,34 +79,63 @@ function updateSimulation(du) {
             }
         }
         if(flag === true){
-
-            clearFloor(i);
+           
+            index = i;
+            clearFloor(i,du);
+            score += 10;
+            if((score%10) === 0){
+                level++;
+            }
         }
         flag  = true;
     }
-    if(  eatKey(G) ){
-        gridPoints = !gridPoints;
-    }
+
     //console.log(playField[0][3][3]);
 }
 
-function clearFloor(u){
+function clearFloor(u,du){
     for(var i = 0; i<kubbar.length; i++){
         kubbar[i].landed = false;
-        if(kubbar[i].location1[1] === u){
+        playField[kubbar[i].location1[0]][kubbar[i].location1[1]][kubbar[i].location1[2]] = false;
+        playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = false;
+        playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = false;
+
+        if(kubbar[i].location1[1] === u && kubbar[i].block1Alive){
             kubbar[i].block1Alive = false;
+            
             kubbar[i].size--;
-        }
-        if(kubbar[i].location2[1] === u){
-            kubbar[i].block2Alive = false;
-            kubbar[i].size--;
-        }
-        if(kubbar[i].location3[1] === u){
-            kubbar[i].block3Alive = false;
-            kubbar[i].size--;
+        }else if(kubbar[i].location1[1] < u){
+            kubbar[i].location1[1]++;
         }
 
-          
+        if(kubbar[i].location2[1] === u && kubbar[i].block2Alive){
+            kubbar[i].block2Alive = false;
+            
+            kubbar[i].size--;
+        }else if(kubbar[i].location2[1] < u){
+            kubbar[i].location2[1]++;
+        }
+
+        if(kubbar[i].location3[1] === u && kubbar[i].block3Alive){
+            kubbar[i].block3Alive = false;
+            
+            kubbar[i].size--;
+        }else if(kubbar[i].location3[1] < u){
+            kubbar[i].location3[1]++;
+        }
+        console.log(kubbar[0]);
+    }
+    for(var i = 0; i<kubbar.length; i++){
+        if(kubbar[i].block1Alive){
+
+            playField[kubbar[i].location1[0]][kubbar[i].location1[1]][kubbar[i].location1[2]] = true;
+        }
+        if(kubbar[i].block2Alive){
+            playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = true;
+        }
+        if(kubbar[i].block3Alive){
+            playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = true;
+        }
     }
 }
 

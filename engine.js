@@ -77,7 +77,7 @@ main._iterCore = function (dt) {
         //uppfæri alla logic
         update(dt);
     }else{
-        console.log('you lost');
+        //console.log('you lost');
     }
 
     //teikna allt

@@ -32,7 +32,6 @@ Kubbur.prototype.update = function (du) {
     }
     this.time += du;
 
-
     playField[this.location1[0]][this.location1[1]][this.location1[2]] = false;
     playField[this.location2[0]][this.location2[1]][this.location2[2]] = false;
     playField[this.location3[0]][this.location3[1]][this.location3[2]] = false;
@@ -333,8 +332,8 @@ Kubbur.prototype.update = function (du) {
                 }
                 else if(this.state === 5){
                     console.log("case 5, type 2, S");
-                    if( this.location2[0]-1 >= 0 &&
-                        playField[this.location2[0]-1][this.location2[1]][this.location2[2]] === false){
+                    if(
+                        playField[this.location2[0]+1][this.location2[1]][this.location2[2]-1] === false){
 
                         this.location1[0]--;
                         this.location2[0]++;
@@ -696,7 +695,7 @@ Kubbur.prototype.update = function (du) {
     if(keys[space]){
         var time = 1;
     }else{
-        time = 200;
+        time = (100-(10*level));
     }
     if(this.time > time && !this.landed){
         this.time = 0;
@@ -713,6 +712,7 @@ Kubbur.prototype.update = function (du) {
 
             this.location3[1]++;
         }
+        //console.log('dropping acid bitch');
     }
 
     if(this.block1Alive){
@@ -728,7 +728,7 @@ Kubbur.prototype.update = function (du) {
         playField[this.location3[0]][this.location3[1]][this.location3[2]] = true;
     }
 
-    
+    //console.log(this.signal);
     return this.signal;
 
 
@@ -745,6 +745,7 @@ Kubbur.prototype.checkBottom = function(){
             hasWon = true;
             this.signal++;
         }
+        //console.log('herna 1')
     }
     else if((this.location2[1]+1 > 21 || playField[this.location2[0]][this.location2[1]+1][this.location2[2]] == true)&&this.block2Alive){
         this.signal++;
@@ -754,15 +755,17 @@ Kubbur.prototype.checkBottom = function(){
             hasWon = true;
             this.signal++;
         }
+        //console.log('herna 2')
     }
     else if((this.location3[1]+1 > 21 || playField[this.location3[0]][this.location3[1]+1][this.location3[2]] == true)&&this.block3Alive){
         this.signal++;
         this.landed = true;
         this.active = false;
-        if(this.location2[1]<3){
+        if(this.location3[1]<3){
                 hasWon = true;
                 this.signal++;
         }
+        //console.log('herna 3')
     }
 }
 
