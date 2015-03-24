@@ -28,6 +28,7 @@ var vertices = {
 	makeGrid: function( ){
 	    return this.add( new Hexahedron(
     	{
+            drawMode: {POINTS: false, LINES: true, TRIANGLES: true},
             red: 1.0,
             blue: 0.0,
             green: 0.0,
@@ -40,6 +41,7 @@ var vertices = {
 	makeCube: function( ){
 	    return this.add( new Hexahedron(
 	    {
+            drawMode: {POINTS: false, LINES: true, TRIANGLES: true},
             red: 1.0,
             blue: 0.0,
             green: 0.0,
@@ -54,6 +56,7 @@ var vertices = {
 	makeGround: function( ){
 	    return this.add( new Square(
 		{
+            drawMode: {POINTS: false, LINES: true, TRIANGLES: true},
 	        red: 0.0,
 	        blue: 0.0,
 	        green: 1.0,
@@ -84,11 +87,6 @@ var vertices = {
 	renderGround: function( ctm, matrixLoc){
 		var start = this.groundIndex.start;
 		var count = this.groundIndex.count;
-
-		//console.log( start );
-		//console.log( points.length );
-		//debugger;
-
 
         ctm = mult( ctm, translate([0.0, -4.0, 0.0]));
         ctm = mult( ctm, scale4( 5.0,1.0,5.0));

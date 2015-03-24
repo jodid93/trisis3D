@@ -38,15 +38,14 @@ function geraKubb( drawArrayIndex ) {
 };
 
 
-
 //fall sem sér um að uppfæra alla hlutina í leiknum*/
 function updateSimulation(du) {
     console.log(kubbar.length);
     for(var i = 0; i<kubbar.length; i++){
         var stateOfBlock = kubbar[i].update(du)
         if(stateOfBlock === 1){
-            var start = vertices.shape.t_subinterval[1].start;
-            var count = vertices.shape.t_subinterval[1].count;
+            var start = vertices.cubeIndex.start;
+            var count = vertices.cubeIndex.count;
             geraKubb( [start,count] );
         }else if(stateOfBlock === -1){
             kubbar.splice(i,0);
@@ -90,6 +89,10 @@ function clearFloor(u){
     }
 }
 
+
+//
+// GLOBAL VARIABLES
+//
 var canvas;
 var gl;
 
@@ -117,6 +120,10 @@ var origY;
 //TÍMABUNDIÐ:
 var cBuffer;
 var kassi;
+
+var POINTS     = 0;
+var LINES      = 1;
+var TRIANGLES  = 4;
 
 
 var zDist = -4.0;

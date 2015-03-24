@@ -21,6 +21,9 @@ Shapes.prototype.l_points;	//keep track of every vertice points for Shapes
 Shapes.prototype.l_colors; //For every three vertices points is a one
 								//special color. 
 
+Shapes.prototype.p_points;	//keep track of every vertice points for Shapes
+Shapes.prototype.p_colors; //For every three vertices points is a one
+								//special color. 
 
 
 //keeps track of subinterval for every shape
@@ -55,11 +58,11 @@ Shapes.prototype.reset = function(){
 };
 
 
-Shapes.prototype.insertShape = function( shape, speciality ){
+Shapes.prototype.insertShape = function( shape, enviroment ){
 	this.shape.push( shape );
 	
 
-	if( speciality === "grid" ){
+	if( enviroment === "grid" ){
 		this.t_points = this.t_points.concat( shape.l_points );
 		this.t_textur = this.t_textur.concat( shape.l_colors );	
 		var temp = this.t_numVertices + shape.l_points.length;
