@@ -61,7 +61,6 @@ Shapes.prototype.reset = function(){
 Shapes.prototype.insertShape = function( shape, enviroment ){
 	this.shape.push( shape );
 	
-
 	if( enviroment === "grid" ){
 		this.t_points = this.t_points.concat( shape.l_points );
 		this.t_textur = this.t_textur.concat( shape.l_colors );	
@@ -71,6 +70,18 @@ Shapes.prototype.insertShape = function( shape, enviroment ){
 			index: this.numShapes,
 			start: this.t_numVertices, 
 			count: shape.l_points.length,
+			end:   temp 
+		};
+		this.t_numVertices = temp;
+	} else 	if( enviroment === "pointGrid"){
+		this.t_points = this.t_points.concat( shape.p_points );
+		this.t_textur = this.t_textur.concat( shape.p_colors );	
+		var temp = this.t_numVertices + shape.p_points.length;
+		this.t_subinterval[ this.numShapes ]=
+		{
+			index: this.numShapes,
+			start: this.t_numVertices, 
+			count: shape.p_points.length,
 			end:   temp 
 		};
 		this.t_numVertices = temp;
@@ -89,19 +100,34 @@ Shapes.prototype.insertShape = function( shape, enviroment ){
 	}
 	console.log("t_temp: " + temp);
 
-
-	this.l_points = this.l_points.concat( shape.l_points );
-	this.l_colors = this.l_colors.concat( shape.l_colors );
-	var temp = this.l_numVertices + shape.l_points.length;
-	console.log( this.numShapes );
-	this.l_subinterval[ this.numShapes ] =
+	if( enviroment === "pointGrid"){
+		this.l_points = this.l_points.concat( shape.p_points );
+		this.l_colors = this.l_colors.concat( shape.p_colors );
+		var temp = this.l_numVertices + shape.p_points.length;
+		console.log( this.numShapes );
+		this.l_subinterval[ this.numShapes ] =
+		{
+			index: this.numShapes, 
+			start: this.l_numVertices,
+			count: shape.p_points.length, 
+			end:   temp 
+		};
+		this.l_numVertices = temp;
+	} else 
 	{
-		index: this.numShapes, 
-		start: this.l_numVertices,
-		count: shape.l_points.length, 
-		end:   temp 
-	};
-	this.l_numVertices = temp;
+		this.l_points = this.l_points.concat( shape.l_points );
+		this.l_colors = this.l_colors.concat( shape.l_colors );
+		var temp = this.l_numVertices + shape.l_points.length;
+		console.log( this.numShapes );
+		this.l_subinterval[ this.numShapes ] =
+		{
+			index: this.numShapes, 
+			start: this.l_numVertices,
+			count: shape.l_points.length, 
+			end:   temp 
+		};
+		this.l_numVertices = temp;
+	}
 
 	this.numShapes++;
 

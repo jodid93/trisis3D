@@ -66,6 +66,9 @@ function updateSimulation(du) {
         }
         flag  = true;
     }
+    if(  eatKey(G) ){
+        gridPoints = !gridPoints;
+    }
     //console.log(playField[0][3][3]);
 }
 
@@ -121,6 +124,9 @@ var origY;
 var cBuffer;
 var kassi;
 
+//KEYS TRIGGERS
+var gridPoints;
+
 var POINTS     = 0;
 var LINES      = 1;
 var TRIANGLES  = 4;
@@ -146,6 +152,9 @@ window.onload = function init()
             }
         }
     }
+
+    //console.log( playField );
+    //debugger;
 
     canvas = document.getElementById( "gl-canvas" );
     
@@ -213,6 +222,9 @@ window.onload = function init()
     //
     // INITIALIZE LISTENERS
     //
+
+
+
     //event listeners for mouse
     canvas.addEventListener("mousedown", function(e){
         movement = true;
@@ -288,6 +300,8 @@ function render()
     ctm = mult( ctm, rotate( parseFloat(spinY), [0, 1, 0] ) );
     ctm = mult( ctm, scale4(0.3,0.3,0.3));
     
+  /*  console.log( ctm );
+    debugger;*/
     //RENDER GRID
     ctmStack.push( ctm );
         vertices.renderGrid(ctm, mvLoc);
@@ -297,6 +311,12 @@ function render()
     //RENDER EARTH
     ctmStack.push( ctm );
         vertices.renderGround(ctm, mvLoc);
+    ctm = ctmStack.pop();
+
+
+    //RENDER GRIDPOINTS
+    ctmStack.push( ctm );
+        vertices.renderGrid(ctm, mvLoc);
     ctm = ctmStack.pop();
 
     //RENDER CUBES

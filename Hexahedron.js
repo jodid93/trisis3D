@@ -13,6 +13,7 @@ function Hexahedron( descr ){
     this.vertices = this.getVertices( );
     this.t_textures = this.getTexture( );
     this.l_colors__ = this.getColor( );
+    this.p_colors__ = this.getColor( );
 
     this.build( );
 }
@@ -81,6 +82,11 @@ Hexahedron.prototype.reset = function(){
     this.l_colors__ =  0;
     this.colorN     =  0;
     
+    this.p_points   = [];
+    this.p_colors   = [];
+    this.p_colors__ =  0;
+    this.colorN     =  0;
+
     this.size     = 0.25;
     this.xAxisSize = this.size;
     this.yAxisSize = this.size;
@@ -104,13 +110,13 @@ Hexahedron.prototype.build = function( ){
 }
 
 Hexahedron.prototype.buildPointHexahedron = function(){
-    this.points( [a, b, c, d, e, f, g, h] );
+    this.points( [0, 1, 2, 3, 4, 5, 6, 7] );
 };
 
 Hexahedron.prototype.points = function( indices ){
     for ( var i = 0; i < indices.length; ++i ) {
         this.p_points.push( this.vertices[indices[i]] );
-        this.p_color.push( this.p_color[this.colorN] );
+        this.p_colors.push( this.p_colors__[this.p_colorN] );
     }
     this.p_colorN;
 };

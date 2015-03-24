@@ -2,15 +2,16 @@ var vertices = {
 	
 	shape: new Shapes(),
 
-	gridIndex:   null,	
-	cubeIndex:   null,	
-	groundIndex: null,
-	counter:     null,	
+	gridIndex:      null,
+	cubeIndex:      null,	
+	groundIndex:    null,
+	pointGridIndex: null,	
 
 	build: function( ){
 		this.gridIndex = this.makeGrid( );
     	this.cubeIndex = this.makeCube(  );
     	this.groundIndex = this.makeGround( );
+    	this.pointGridIndex = this.makePointGrid( );
     	this.pushVertices( );
 	},
 
@@ -38,7 +39,36 @@ var vertices = {
 	    }), "grid");
 	},
 
+	makePointGrid: function( ){
+	    var storePoints = [];
+	    var storeColors = [];
+
+	    var xStart = -1.0;
+	    var yStart = -4.5;
+	    var zStart = -1.0;
+	    var xEnd   =  1.0;
+	    var yEnd   =  4.5;
+	    var zEnd   =  1.0;
+
+	    var factor = 0.5;
+	    for(var x=xStart; x<=xEnd; x = x+factor ){
+		    for(var z=zStart; z<=zEnd; z = z+factor ){
+		    	for(var y=yStart; y<=yEnd; y = y+factor ){
+	    			mat = mat4();
+	    			mat = mult( mat, translate([x, y, z]));
+					vec = vec3(mat[0][3],mat[1][3],mat[2][3]);
+	    			storePoints.push( vec );
+	    			storeColors.push( vec4(0.5, 0.5, 0.5, 1.0) );
+	    		}
+	    	}
+	    }
+
+	    return this.add( {	p_points: storePoints, 
+	    					p_colors: storeColors }, "pointGrid" );
+	},
+
 	makeCube: function( ){
+
 	    return this.add( new Hexahedron(
 	    {
             drawMode: {POINTS: false, LINES: true, TRIANGLES: true},
@@ -76,12 +106,17 @@ var vertices = {
 
 	//VERÐUM AÐ HAFA ÞETTA ALLTAF TEIKNAÐ MEÐ LÍNUM
 	renderGrid: function( ctm, matrixLoc){
-		var start = this.gridIndex.start;
-		var count = this.gridIndex.count;
-		//var start = shape.l_subinterval[this.gridIndex.index].start;
+		var start1 = this.gridIndex.start;
+		var count1 = this.gridIndex.count;
+		var start2 = this.pointGridIndex.start;
+		var count2 = this.pointGridIndex.count;
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
-		gl.drawArrays(gl.LINES, start, count);
+		gl.drawArrays(gl.LINES, start1, count1);
+
+		if( gridPoints ){
+			gl.drawArrays(gl.POINTS, start2, count2);
+		}
 	},
 
 	renderGround: function( ctm, matrixLoc){
