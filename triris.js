@@ -245,7 +245,7 @@ window.onload = function init()
          }
      }  );  
 
-    geraKubb( [24,24], drawMode);
+    geraKubb( [24,24] );
 }
 
 
