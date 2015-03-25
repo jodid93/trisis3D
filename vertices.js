@@ -52,8 +52,8 @@ var vertices = {
 
 	    var factor = 0.5;
 	    for(var x=xStart; x<=xEnd; x = x+factor ){
-		    for(var z=zStart; z<=zEnd; z = z+factor ){
 		    	for(var y=yStart; y<=yEnd; y = y+factor ){
+		    for(var z=zStart; z<=zEnd; z = z+factor ){
 	    			mat = mat4();
 	    			mat = mult( mat, translate([x, y, z]));
 					vec = vec3(mat[0][3],mat[1][3],mat[2][3]);
@@ -108,13 +108,17 @@ var vertices = {
 	renderGrid: function( ctm, matrixLoc){
 		var start1 = this.gridIndex.start;
 		var count1 = this.gridIndex.count;
-		var start2 = this.pointGridIndex.start;
-		var count2 = this.pointGridIndex.count;
-
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
 		gl.drawArrays(gl.LINES, start1, count1);
+		
+		/*gl.drawArrays(gl.LINES, 0, 2);
+		gl.drawArrays(gl.LINES, 8, 2);
+		gl.drawArrays(gl.LINES, 20, 2);
+		gl.drawArrays(gl.LINES, 22, 2);*/
 
 		if( gridPoints ){
+			var start2 = this.pointGridIndex.start;
+			var count2 = this.pointGridIndex.count;
 			gl.drawArrays(gl.POINTS, start2, count2);
 		}
 	},

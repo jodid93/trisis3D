@@ -61,7 +61,7 @@ function updateSimulation(du) {
             
         }
     }
-    if(  eatKey(G) ){
+    if(  eatKey(G) ){ 
         gridPoints = !gridPoints;
     }
     //console.log(playField[0][3][3]);
@@ -178,6 +178,8 @@ var POINTS     = 0;
 var LINES      = 1;
 var TRIANGLES  = 4;
 
+var g_textures = [];
+
 
 var zDist = -4.0;
 
@@ -242,6 +244,11 @@ window.onload = function init()
     // CREATE MAP
     //
     vertices.build();
+
+    //
+    // CONFIGURE TEXTURE
+    //
+    //g_textures = texture.convertImagesToTexture( g_images );
 
     //
     // INITIALIZE BUFFERS
@@ -347,8 +354,6 @@ function render()
     ctm = mult( ctm, rotate( parseFloat(spinY), [0, 1, 0] ) );
     ctm = mult( ctm, scale4(0.3,0.3,0.3));
     
-  /*  console.log( ctm );
-    debugger;*/
     //RENDER GRID
     ctmStack.push( ctm );
         vertices.renderGrid(ctm, mvLoc);
@@ -365,6 +370,7 @@ function render()
     ctmStack.push( ctm );
         vertices.renderGrid(ctm, mvLoc);
     ctm = ctmStack.pop();
+
 
     //RENDER CUBES
     for(var i = 0; i<kubbar.length; i++){

@@ -152,7 +152,43 @@ main.init = function () {
 
 
 // Kick it off
-main.init();
+//main.init();
+
+
+
+// =============
+// PRELOAD STUFF
+// =============
+
+var g_images = [];
+
+main.requestPreloads = function() {
+
+    var requiredImages = {
+        imageExample : "images/test1.jpg"
+    };
+
+    //
+    //PRELOADS
+    //
+    //preLoadAudio();
+    imagesPreload(requiredImages, g_images, main.preloadDone);
+}
+
+//var g_sprites = [];
+main.preloadDone = function() {
+
+    //for(var image in g_images) {
+    //    g_sprites[image] = new Sprite(g_images[image], image);
+    //}
+
+    main.init();
+}
+
+
+
+// Kick it off
+main.requestPreloads();
 ////////////////////////////////////////////////////////////////////////////
 //              ENDIR Á ENGINE
 ////////////////////////////////////////////////////////////////////////////

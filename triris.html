@@ -12,6 +12,7 @@ uniform mat4 modelview;
 void main() 
 {
     fColor = vColor;
+    gl_PointSize = 1.0;
     gl_Position = projection * modelview * vPosition;
 } 
 </script>
@@ -36,6 +37,9 @@ main()
 
 <script type="text/javascript" src="lykklabordsStjornandi.js"></script>
 
+<script type="text/javascript" src="imagesPreload.js"></script>
+<script type="text/javascript" src="soundsPreload.js"></script>
+<script type="text/javascript" src="Audio.js"></script>
 <script type="text/javascript" src="Hexahedron.js"></script>
 <script type="text/javascript" src="Square.js"></script>
 <script type="text/javascript" src="Shapes.js"></script>

@@ -3,9 +3,11 @@ var texture = {
 	storage: [],
 
 	convertImagesToTexture: function( images ){
-		for( var image in images){
-			this.configureTexture( image );
+		var textures = [];
+        for( var image in images){
+			textures.push( this.configureTexture( images[image] ) );
 		}
+        return textures;
 	},
 
 	//procces a image to a fully texture
@@ -17,8 +19,7 @@ var texture = {
         gl.generateMipmap( gl.TEXTURE_2D );
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR );
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR );
-        this.storage.push( texture );
-        //return index ?
+        return texture;
     },	
 
     //LAGA: það þarf að setja texture dót í fragment-sh.
