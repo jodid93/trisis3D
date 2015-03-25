@@ -41,6 +41,10 @@ var D = keyCode('D');
 var W = keyCode('W');
 var P = keyCode('P');
 var G = keyCode('G');
+
+var KEY_ONE = keyCode('1');
+var KEY_TWO = keyCode('2');
+
 var space = 32;
 var left = 37;
 var up = 38; 

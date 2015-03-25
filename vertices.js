@@ -111,10 +111,12 @@ var vertices = {
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
 		gl.drawArrays(gl.LINES, start1, count1);
 		
-		/*gl.drawArrays(gl.LINES, 0, 2);
-		gl.drawArrays(gl.LINES, 8, 2);
-		gl.drawArrays(gl.LINES, 20, 2);
-		gl.drawArrays(gl.LINES, 22, 2);*/
+		if( MODE_ONE ){
+			gl.drawArrays(gl.LINES, 0, 2);
+			gl.drawArrays(gl.LINES, 8, 2);
+			gl.drawArrays(gl.LINES, 20, 2);
+			gl.drawArrays(gl.LINES, 22, 2);
+		}
 
 		if( gridPoints ){
 			var start2 = this.pointGridIndex.start;

@@ -64,6 +64,12 @@ function updateSimulation(du) {
     if(  eatKey(G) ){ 
         gridPoints = !gridPoints;
     }
+    if(  eatKey( KEY_ONE ) ){ 
+        MODE_ONE = !MODE_ONE;
+    }
+    if(  eatKey( KEY_TWO ) ){ 
+        MODE_TWO = !MODE_TWO;
+    }
     //console.log(playField[0][3][3]);
 }
 
@@ -173,6 +179,9 @@ var kassi;
 
 //KEYS TRIGGERS
 var gridPoints;
+var MODE_ONE;
+var MODE_TWO;
+
 
 var POINTS     = 0;
 var LINES      = 1;
