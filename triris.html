@@ -1,17 +1,21 @@
 <html>
-
 <script id="vertex-shader" type="x-shader/x-vertex">
 
 attribute  vec4 vPosition;
 attribute  vec4 vColor;
+attribute  vec2 vTexCoord;
+
 varying vec4 fColor;
+varying vec2 fTexCoord;
 
 uniform mat4 projection;
 uniform mat4 modelview;
 
 void main() 
 {
+    fTexCoord = vTexCoord;
     fColor = vColor;
+    gl_PointSize = 1.0;
     gl_Position = projection * modelview * vPosition;
 } 
 </script>
@@ -19,13 +23,18 @@ void main()
 <script id="fragment-shader" type="x-shader/x-fragment">
 
 precision mediump float;
-   
+
 varying vec4 fColor;
+
+varying vec2 fTexCoord;
+
+uniform sampler2D texture1;
 
 void
 main()
 {
-    gl_FragColor = fColor;
+    vec4 color1  = texture2D( texture1, fTexCoord ); 
+    gl_FragColor = color1;
 }
 </script>
 
@@ -37,6 +46,9 @@ main()
 
 <script type="text/javascript" src="lykklabordsStjornandi.js"></script>
 
+<script type="text/javascript" src="imagesPreload.js"></script>
+<script type="text/javascript" src="soundsPreload.js"></script>
+<script type="text/javascript" src="Audio.js"></script>
 <script type="text/javascript" src="Hexahedron.js"></script>
 <script type="text/javascript" src="Square.js"></script>
 <script type="text/javascript" src="Shapes.js"></script>
@@ -52,6 +64,8 @@ main()
 
 <body>
 <dev align="center">
+
+<img id = "texImage" src = "images/test2.jpg" ></img> 
 <canvas id="gl-canvas" width="512" height="512" style="border: 1px solid black;">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
