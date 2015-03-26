@@ -4,8 +4,8 @@
 
 /*jslint browser: true, devel: true, white: true */
 
-var canvas = document.getElementById("myCanvas");
-var s_ctx = canvas.getContext("2d");
+/*var canvas = document.getElementById("myCanvas");
+var s_ctx = canvas.getContext("2d");*/
 
 /*
 0        1         2         3         4         5         6         7         8

@@ -30,6 +30,8 @@ Image.prototype.asyncLoad = function(src, asyncCallback) {
     //
     this.onload = asyncCallback;
     this.onerror = asyncCallback;
+    //this.hidden = true;
+    //this.crossOrigin = "anonymous";
     
     // NB: The load operation can be triggered from any point 
     // after setting `this.src`.

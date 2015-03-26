@@ -165,7 +165,17 @@ var g_images = [];
 main.requestPreloads = function() {
 
     var requiredImages = {
-        imageExample : "images/test1.jpg"
+        brosKall : "images/test1.jpg",      //0
+        shell1   : "images/shells-01.jpg",  //1
+        shell2   : "images/shells-02.jpg",  //2
+        shell3   : "images/shells-03.jpg",  //3
+        shell4   : "images/shells-04.jpg",  //4
+        shell5   : "images/shells-05.jpg",  //5
+        shell6   : "images/shells-11.jpg",  //6
+        //wall1   : "images/shells-07.jpg"
+        wall1   : "images/shells-09.jpg",   
+        grid   : "images/shells-10.jpg"
+       // veggur : "images/test2.jpg"1
     };
 
     //
@@ -181,6 +191,9 @@ main.preloadDone = function() {
     //for(var image in g_images) {
     //    g_sprites[image] = new Sprite(g_images[image], image);
     //}
+    //log1(g_images);
+
+    //console.log( "halllsdfsdkdsfjksdfæjkskædjfl");
 
     main.init();
 }

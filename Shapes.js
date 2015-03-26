@@ -135,7 +135,11 @@ Shapes.prototype.insertShape = function( shape, enviroment ){
 	//console.log( this.t_points );
 	//console.log( this.l_points );
 
-	
+	if( enviroment === "world"){
+		
+	}
+
+
 	if( drawMode === gl.LINES ){
 		return this.l_subinterval[this.numShapes-1];
 	} else

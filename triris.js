@@ -65,10 +65,10 @@ function updateSimulation(du) {
         gridPoints = !gridPoints;
     }
     if(  eatKey( KEY_ONE ) ){ 
-        MODE_ONE = !MODE_ONE;
+        GRID_ONE = !GRID_ONE;
     }
     if(  eatKey( KEY_TWO ) ){ 
-        MODE_TWO = !MODE_TWO;
+        GRID_TWO = !GRID_TWO;
     }
     //console.log(playField[0][3][3]);
 }
@@ -177,10 +177,15 @@ var origY;
 var cBuffer;
 var kassi;
 
+
+var texCoords = [];
+var program;
+
+
 //KEYS TRIGGERS
 var gridPoints;
-var MODE_ONE;
-var MODE_TWO;
+var GRID_ONE = true;
+var GRID_TWO = false;
 
 
 var POINTS     = 0;
@@ -190,7 +195,7 @@ var TRIANGLES  = 4;
 var g_textures = [];
 
 
-var zDist = -4.0;
+var zDist = -100.0;
 
 var proLoc;
 var mvLoc;
@@ -227,7 +232,7 @@ window.onload = function init()
     //
     //  Load shaders and initialize attribute buffers
     //
-    var program = initShaders( gl, "vertex-shader", "fragment-shader" );
+    program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
 
     /*colors.push( vec3(  0.0, 0.0, 0.0 ) );
@@ -246,29 +251,43 @@ window.onload = function init()
     //
     // SELECT DRAW MODE
     //
-    drawMode = gl.LINES;
-    //drawMode = gl.TRIANGLES;
+    //drawMode = gl.LINES;
+    drawMode = gl.TRIANGLES;
 
     //
     // CREATE MAP
     //
     vertices.build();
 
+
     //
     // CONFIGURE TEXTURE
     //
-    //g_textures = texture.convertImagesToTexture( g_images );
+    var textures = texture.convertImagesToTexture( g_images );
+
+
+    
+
+    console.log( g_images );
 
     //
     // INITIALIZE BUFFERS
     //
-    cBuffer = gl.createBuffer();
+   /* cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
 
     var vColor = gl.getAttribLocation( program, "vColor" );
     gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColor );
+    gl.enableVertexAttribArray( vColor );*/
+    
+    var tBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, tBuffer);
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(texCoords), gl.STATIC_DRAW );
+    
+    var vTexCoord = gl.getAttribLocation( program, "vTexCoord" );
+    gl.vertexAttribPointer( vTexCoord, 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vTexCoord );
 
     kassi = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, kassi);
@@ -277,6 +296,7 @@ window.onload = function init()
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
+
 
     proLoc = gl.getUniformLocation( program, "projection" );
     mvLoc = gl.getUniformLocation( program, "modelview" );
@@ -314,13 +334,14 @@ window.onload = function init()
     // Event listener for mousewheel
      window.addEventListener("mousewheel", function(e){
          if( e.wheelDelta > 0.0 ) {
-             zDist += 0.1;
+             zDist += 1.1;
          } else {
-             zDist -= 0.1;
+             zDist -= 1.1;
          }
      }  );  
-
-    geraKubb( [24,24] );
+    var start = vertices.cubeIndex.start;
+    var count = vertices.cubeIndex.count;
+    geraKubb( [start, count] );
 }
 
 
@@ -378,6 +399,12 @@ function render()
     //RENDER GRIDPOINTS
     ctmStack.push( ctm );
         vertices.renderGrid(ctm, mvLoc);
+    ctm = ctmStack.pop();
+
+
+    //RENDER WORLD
+    ctmStack.push( ctm );
+        vertices.renderWorld(ctm, mvLoc);
     ctm = ctmStack.pop();
 
 

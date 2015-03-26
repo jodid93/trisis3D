@@ -175,7 +175,7 @@ function muteTrigger( bool ){
 //Plays theme sound in wich game sate is on
 function playThemeSong() {
 	var vol = g_audio.themeGame.lowVolume;
-	if( !g_audio.themeGame.mute &&  ){
+	/*if( !g_audio.themeGame.mute &&  ){
 		if( startScreen.isVisible() && !g_gameOver && !g_gameWon)
 		{
 			g_audio.themeStart.soundVolume(vol);
@@ -195,7 +195,7 @@ function playThemeSong() {
 			g_audio.themeWon.soundVolume(vol);
 			g_audio.themeWon.playSound();
 		}
-	}
+	}*/
 }
 
 

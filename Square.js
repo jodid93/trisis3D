@@ -113,9 +113,10 @@ Square.prototype.quad = function(a, b, c, d)
     var texind  = [ 1, 0, 3, 1, 3, 2 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
-        this.t_points.push( this.vertices[indices[i]] );
-        this.t_textur.push( this.t_textures[texind [i]] );
+        this.t_points.push( this.vertices[indices[i]]  );
+        this.t_textur.push( this.t_textures[texind [i]]);
     }
+    
     this.texturN++; //gerir ekki neitt
 };
 
