@@ -42,6 +42,8 @@ function geraKubb( drawArrayIndex ) {
 
 //fall sem sér um að uppfæra alla hlutina í leiknum*/
 function updateSimulation(du) {
+    document.getElementById("Score").innerHTML = score;
+    document.getElementById("Level").innerHTML = level;
     var flow = false;
    
     for(var i = 0; i<kubbar.length; i++){
@@ -83,6 +85,7 @@ function checkForFumble(du){
             index = i;
             clearFloor(i,du);
             score += 10;
+
             if((score%10) === 0){
                 level++;
             }
