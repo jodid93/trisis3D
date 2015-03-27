@@ -128,7 +128,6 @@ var vertices = {
 		gl.activeTexture( gl.TEXTURE0 );
     	gl.bindTexture(gl.TEXTURE_2D, textures[8]);
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
-		//gl.uniform1i(gl.getUniformLocation(program, "texture1"), 8);
 	
 		var start1 = this.gridIndex.start;
 		var count1 = this.gridIndex.count;

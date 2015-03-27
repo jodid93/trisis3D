@@ -87,7 +87,7 @@ function checkForFumble(du){
             }
         }
         if(flag === true){
-           
+            g_audio.fumble.Play();
             index = i;
             clearFloor(i,du);
             score += 10;

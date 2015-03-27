@@ -209,7 +209,7 @@ function playThemeSong() {
 //
 var requiredSounds = {
 	//GAMEPLAY SOUND
-	shipWarp	 	: "sounds/warp.ogg"
+	fumble	: "sounds/fumble.ogg"
 };
 
 

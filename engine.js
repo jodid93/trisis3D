@@ -165,35 +165,31 @@ var g_images = [];
 main.requestPreloads = function() {
 
     var requiredImages = {
-        //brosKall : "images/test1.jpg",      //0
         shell1   : "images/shells-01.jpg",  //1
         shell2   : "images/shells-02.jpg",  //2
         shell3   : "images/shells-03.jpg",  //3
         shell4   : "images/shells-04.jpg",  //4
         shell5   : "images/shells-05.jpg",  //5
         shell6   : "images/shells-06.jpg",  //6
-        //wall1   : "images/shells-07.jpg"
         wall1   : "images/shells-09.jpg",   
         grid   : "images/shells-10.jpg"
-       // veggur : "images/test2.jpg"1
     };
 
+    var requiredSounds = {
+        fumble: "sounds/fumble.ogg"
+    }
     //
     //PRELOADS
     //
     //preLoadAudio();
     imagesPreload(requiredImages, g_images, main.sortImages);
-    sortImages
+    preLoadAudio();
+    
 }
 
 main.sortImages = function(){
 
-    /*console.log('g_images = ',g_images)
-    var temp = [];
-    for(var i = 0; i<g_images.length; i++){
-        for(var u = 0; i<g_images; u++){ 
-        }
-    }*/
+    //we need to sort the images because we load them asychronusly
     var images = [];
     for(var image in g_images){
         if(g_images[image].name === 'shell1'){
