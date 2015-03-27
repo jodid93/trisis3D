@@ -777,15 +777,27 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         x = 1.25 - this.location1[0] * 0.5;
         y = 5.75 - this.location1[1] * 0.5;
         z = 1.25 - this.location1[2] * 0.5;
-        this.draw(ctm, matrixLoc, x,y,z,this.type);
+        if(this.type === 2){
+            Ktexture = 3;
+        }
+        else{
+            Ktexture = 5;
+        }
+        this.draw(ctm, matrixLoc, x,y,z,Ktexture);
     }
 
     if(this.location2[1] > 1&&this.block2Alive){
 
         x = 1.25 - this.location2[0] * 0.5;
         y = 5.75 - this.location2[1] * 0.5;
-        z = 1.25 - this.location2[2] * 0.5;     
-        this.draw(ctm, matrixLoc, x,y,z,this.type);
+        z = 1.25 - this.location2[2] * 0.5;    
+        if(this.type === 2){
+            Ktexture = 3;
+        }
+        else{
+            Ktexture = 5;
+        }
+        this.draw(ctm, matrixLoc, x,y,z,Ktexture);
     }
 
     if(this.location3[1]>1&&this.block3Alive){
@@ -793,7 +805,13 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         x = 1.25 - this.location3[0] * 0.5;
         y = 5.75 - this.location3[1] * 0.5;
         z = 1.25 - this.location3[2] * 0.5;
-        this.draw(ctm, matrixLoc, x,y,z,this.type);
+        if(this.type === 2){
+            Ktexture = 3;
+        }
+        else{
+            Ktexture = 5;
+        }
+        this.draw(ctm, matrixLoc, x,y,z,Ktexture);
     }
 }
 

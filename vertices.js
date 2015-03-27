@@ -126,7 +126,7 @@ var vertices = {
 		ctm = mult( ctm, translate([0.0, 0.12, 0.0]));	
 
 		gl.activeTexture( gl.TEXTURE0 );
-    	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
+    	gl.bindTexture(gl.TEXTURE_2D, textures[8]);
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
 		//gl.uniform1i(gl.getUniformLocation(program, "texture1"), 8);
 	
@@ -164,7 +164,7 @@ var vertices = {
         ctm = mult( ctm, rotate( 90, [ 1, 0, 0]));
 
         gl.activeTexture( gl.TEXTURE0 );
-    	gl.bindTexture(gl.TEXTURE_2D, textures[5]);
+    	gl.bindTexture(gl.TEXTURE_2D, textures[0]);
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
 		//gl.uniform1i(gl.getUniformLocation(program, "texture1"), 3);
 		gl.drawArrays(drawMode, start, count);
@@ -178,7 +178,7 @@ var vertices = {
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
 
 		gl.activeTexture( gl.TEXTURE0 );
-    	gl.bindTexture(gl.TEXTURE_2D, textures[8]);
+    	gl.bindTexture(gl.TEXTURE_2D, textures[6]);
 		//gl.uniform1i(gl.getUniformLocation(program, "texture1"), 6);
 		gl.drawArrays(gl.TRIANGLES, start, count);
 	}
