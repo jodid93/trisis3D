@@ -183,7 +183,7 @@ var kassi;
 
 var texCoords = [];
 var program;
-
+var textures;
 
 //KEYS TRIGGERS
 var gridPoints;
@@ -198,7 +198,7 @@ var TRIANGLES  = 4;
 var g_textures = [];
 
 
-var zDist = -100.0;
+var zDist = -5.0;
 
 var proLoc;
 var mvLoc;
@@ -266,12 +266,10 @@ window.onload = function init()
     //
     // CONFIGURE TEXTURE
     //
-    var textures = texture.convertImagesToTexture( g_images );
-
-
     
+    textures = texture.convertImagesToTexture( g_images );
 
-    console.log( g_images );
+
 
     //
     // INITIALIZE BUFFERS

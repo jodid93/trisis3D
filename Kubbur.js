@@ -777,7 +777,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         x = 1.25 - this.location1[0] * 0.5;
         y = 5.75 - this.location1[1] * 0.5;
         z = 1.25 - this.location1[2] * 0.5;
-        this.draw(ctm, matrixLoc, x,y,z);
+        this.draw(ctm, matrixLoc, x,y,z,this.type);
     }
 
     if(this.location2[1] > 1&&this.block2Alive){
@@ -785,7 +785,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         x = 1.25 - this.location2[0] * 0.5;
         y = 5.75 - this.location2[1] * 0.5;
         z = 1.25 - this.location2[2] * 0.5;     
-        this.draw(ctm, matrixLoc, x,y,z);
+        this.draw(ctm, matrixLoc, x,y,z,this.type);
     }
 
     if(this.location3[1]>1&&this.block3Alive){
@@ -793,15 +793,17 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         x = 1.25 - this.location3[0] * 0.5;
         y = 5.75 - this.location3[1] * 0.5;
         z = 1.25 - this.location3[2] * 0.5;
-        this.draw(ctm, matrixLoc, x,y,z);
+        this.draw(ctm, matrixLoc, x,y,z,this.type);
     }
 }
 
-Kubbur.prototype.draw = function(ctm, matrixLoc,x,y,z){
+Kubbur.prototype.draw = function(ctm, matrixLoc,x,y,z,index){
     var start = this.arrayIndex[0];
     var count = this.arrayIndex[1];
     ctm1 = mult( ctm, translate( x, y, z ) );
-    gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1));        
-    gl.uniform1i(gl.getUniformLocation(program, "texture1"), 4);
+    gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1)); 
+    gl.activeTexture( gl.TEXTURE0 );
+    gl.bindTexture(gl.TEXTURE_2D, textures[index]);
+
     gl.drawArrays(drawMode, start, count);
 };

@@ -6,6 +6,7 @@ var texture = {
         for( var image in images){
 			this.storage.push( this.configureTexture( images[image] ) );
 		}
+        gl.uniform1i(gl.getUniformLocation(program, "texture1"), 0);
         this.activeTexture();
         return this.storage;
 	},
