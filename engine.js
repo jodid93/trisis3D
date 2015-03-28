@@ -165,24 +165,55 @@ var g_images = [];
 main.requestPreloads = function() {
 
     var requiredImages = {
-        brosKall : "images/test1.jpg",      //0
         shell1   : "images/shells-01.jpg",  //1
         shell2   : "images/shells-02.jpg",  //2
         shell3   : "images/shells-03.jpg",  //3
         shell4   : "images/shells-04.jpg",  //4
         shell5   : "images/shells-05.jpg",  //5
-        shell6   : "images/shells-11.jpg",  //6
-        //wall1   : "images/shells-07.jpg"
+        shell6   : "images/shells-06.jpg",  //6
         wall1   : "images/shells-09.jpg",   
         grid   : "images/shells-10.jpg"
-       // veggur : "images/test2.jpg"1
     };
 
+    var requiredSounds = {
+        fumble: "sounds/fumble.ogg"
+    }
     //
     //PRELOADS
     //
     //preLoadAudio();
-    imagesPreload(requiredImages, g_images, main.preloadDone);
+    imagesPreload(requiredImages, g_images, main.sortImages);
+    preLoadAudio();
+    
+}
+
+main.sortImages = function(){
+
+    //we need to sort the images because we load them asychronusly
+    var images = [];
+    for(var image in g_images){
+        if(g_images[image].name === 'shell1'){
+            images[0] = g_images[image];
+        } else if(g_images[image].name === 'shell2'){
+            images[1] = g_images[image];
+        }else if(g_images[image].name === 'shell3'){
+            images[2] = g_images[image];
+        }else if(g_images[image].name === 'shell4'){
+            images[3] = g_images[image];
+        }else if(g_images[image].name === 'shell5'){
+            images[4] = g_images[image];
+        }else if(g_images[image].name === 'shell6'){
+            images[5] = g_images[image];
+        }else if(g_images[image].name === 'wall1'){
+            images[6] = g_images[image];
+        }else{
+            images[7] = g_images[image];
+        }
+    }
+    g_images = images;
+    console.log(images,g_images);
+
+    main.preloadDone();
 }
 
 //var g_sprites = [];

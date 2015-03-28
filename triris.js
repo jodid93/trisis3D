@@ -42,6 +42,8 @@ function geraKubb( drawArrayIndex ) {
 
 //fall sem sér um að uppfæra alla hlutina í leiknum*/
 function updateSimulation(du) {
+    document.getElementById("Score").innerHTML = score;
+    document.getElementById("Level").innerHTML = level;
     var flow = false;
    
     for(var i = 0; i<kubbar.length; i++){
@@ -85,10 +87,11 @@ function checkForFumble(du){
             }
         }
         if(flag === true){
-           
+            g_audio.fumble.Play();
             index = i;
             clearFloor(i,du);
             score += 10;
+
             if((score%10) === 0){
                 level++;
             }
@@ -180,7 +183,7 @@ var kassi;
 
 var texCoords = [];
 var program;
-
+var textures;
 
 //KEYS TRIGGERS
 var gridPoints;
@@ -195,7 +198,7 @@ var TRIANGLES  = 4;
 var g_textures = [];
 
 
-var zDist = -100.0;
+var zDist = -5.0;
 
 var proLoc;
 var mvLoc;
@@ -262,13 +265,10 @@ window.onload = function init()
 
     //
     // CONFIGURE TEXTURE
-    //
-    var textures = texture.convertImagesToTexture( g_images );
+    //  
+    textures = texture.convertImagesToTexture( g_images );
 
-
-
-
-    console.log( g_images );
+    
 
     //
     // INITIALIZE BUFFERS

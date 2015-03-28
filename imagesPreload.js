@@ -129,4 +129,5 @@ function imagesPreload(requiredImages,
             currentImage.asyncLoad(requiredImages[currentName], preloadHandler);
         }
     }
+    
 }
