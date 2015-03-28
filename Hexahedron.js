@@ -158,7 +158,7 @@ Hexahedron.prototype.buildTriangleHexahedron = function(){
     this.quad( 2, 3, 7, 6 );
     this.quad( 3, 0, 4, 7 );
     this.quad( 6, 5, 1, 2 );
-    this.quad( 4, 5, 6, 7 );
+    this.quad( 6, 7, 4, 5 );
     this.quad( 5, 4, 0, 1 );
 };
 

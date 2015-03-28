@@ -254,8 +254,8 @@ window.onload = function init()
     //
     // SELECT DRAW MODE
     //
-    drawMode = gl.LINES;
-    //drawMode = gl.TRIANGLES;
+    //drawMode = gl.LINES;
+    drawMode = gl.TRIANGLES;
 
     //
     // CREATE MAP
@@ -265,10 +265,10 @@ window.onload = function init()
 
     //
     // CONFIGURE TEXTURE
-    //  
+    //
     textures = texture.convertImagesToTexture( g_images );
 
-    
+
 
     //
     // INITIALIZE BUFFERS
