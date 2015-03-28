@@ -251,8 +251,8 @@ window.onload = function init()
     //
     // SELECT DRAW MODE
     //
-    //drawMode = gl.LINES;
-    drawMode = gl.TRIANGLES;
+    drawMode = gl.LINES;
+    //drawMode = gl.TRIANGLES;
 
     //
     // CREATE MAP
@@ -266,7 +266,7 @@ window.onload = function init()
     var textures = texture.convertImagesToTexture( g_images );
 
 
-    
+
 
     console.log( g_images );
 
