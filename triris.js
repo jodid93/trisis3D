@@ -124,6 +124,7 @@ function checkForFumble(du){
         }
         flag  = true;
     }
+
     if(currentScore === 10){
 
         score += 10;
@@ -134,8 +135,38 @@ function checkForFumble(du){
 
             g_audio.fumble.Play();
         }
-    }
+    }else if(currentScore === 20){
+        var fumbl = true;
+        for(var i = 0; i<3; i++){
 
+            score += 10;
+            if((score%50) === 0){
+                level++;
+                g_audio.levelUp.Play();
+                fumbl = false;
+            }
+        }
+        if(fumbl){ 
+
+            g_audio.fumble.Play();
+        }
+    }else if(currentScore === 30){
+
+        var fumbl = true;
+        for(var i = 0; i<6; i++){
+
+            score += 10;
+            if((score%50) === 0){
+                level++;
+                g_audio.levelUp.Play();
+                fumbl = false;
+            }
+        }
+        if(fumbl){ 
+
+            g_audio.fumble.Play();
+        }
+    }
     //console.log(playField[0][3][3]);
 }
 
