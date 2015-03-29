@@ -182,10 +182,6 @@ main.requestPreloads = function() {
         stone1   : "images/stone-02.jpg",
         texTile1 : "images/woodtile27.jpg"
     };
-
-    var requiredSounds = {
-        fumble: "sounds/fumble.ogg"
-    }
     //
     //PRELOADS
     //
@@ -247,7 +243,7 @@ main.preloadDone = function() {
     //    g_sprites[image] = new Sprite(g_images[image], image);
     //}
     //log1(g_images);
-
+    console.log(g_audio)
     //console.log( "halllsdfsdkdsfjksdfæjkskædjfl");
     main.init();
 }

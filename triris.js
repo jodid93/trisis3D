@@ -106,6 +106,7 @@ function updateSimulation(du) {
 function checkForFumble(du){
     var flag = true;
     var index = 0;
+    var currentScore = 0;
     for(var i = 0; i <22; i++){
         for(var u = 0; u <6; u++){
             for(var o = 0; o <6 ; o++){
@@ -115,16 +116,24 @@ function checkForFumble(du){
             }
         }
         if(flag === true){
-            g_audio.fumble.Play();
+            
+            currentScore += 10;
             index = i;
             clearFloor(i,du);
-            score += 10;
 
-            if((score%50) === 0){
-                level++;
-            }
         }
         flag  = true;
+    }
+    if(currentScore === 10){
+
+        score += 10;
+        if((score%50) === 0){
+            level++;
+            g_audio.levelUp.Play();
+        }else{
+
+            g_audio.fumble.Play();
+        }
     }
 
     //console.log(playField[0][3][3]);

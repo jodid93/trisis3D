@@ -210,13 +210,15 @@ function playThemeSong() {
 //
 var requiredSounds = {
 	//GAMEPLAY SOUND
-	fumble	: "sounds/fumble.ogg"
+	fumble	: "sounds/fumble.ogg",
+	levelUp:"sounds/levelUp.ogg"
 };
 
 
 var g_sounds = [];
 
 function preLoadAudio() {
+	console.log(requiredSounds)
 	soundsPreload(requiredSounds, g_sounds, audioPreloadDone);
 }
 
