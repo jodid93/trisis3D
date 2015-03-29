@@ -72,6 +72,34 @@ function updateSimulation(du) {
     if(  eatKey( KEY_TWO ) ){ 
         GRID_TWO = !GRID_TWO;
     }
+    if(  eatKey( KEY_T ) ){ 
+        initializeTextureMode();
+    }
+    if(  eatKey( KEY_L ) ){ 
+        initializeLineMode();
+    }
+
+    if(  eatKey( KEY_UP ) ){ //UP
+        ppos[0] += step*lookdir[0];
+        ppos[2] += step*lookdir[2];
+    }
+    if( eatKey( KEY_DOWN ) ){ //DOWN
+        ppos[0] -= step*lookdir[0];
+        ppos[2] -= step*lookdir[2];
+    }
+    if( eatKey( KEY_LEFT ) ){ // LEFT
+        ppos[0] += step*lookdir[2];
+        ppos[2] -= step*lookdir[0];
+    }
+    if( eatKey( KEY_RIGHT ) ){ //RIGHT 
+        ppos[0] -= step*lookdir[2];
+        ppos[2] += step*lookdir[0];
+     }
+     if( eatKey( M )){
+        look = !look;
+       // mouselook = !mouselook;
+        resetLook();
+     }
     //console.log(playField[0][3][3]);
 }
 
@@ -87,7 +115,7 @@ function checkForFumble(du){
             }
         }
         if(flag === true){
-            g_audio.fumble.Play();
+           // g_audio.fumble.Play();
             index = i;
             clearFloor(i,du);
             score += 10;
@@ -160,6 +188,13 @@ var NumVertices  = 24;
 var shape  = [];
 var points = [];
 var colors = [];
+var texCoords = [];
+var g_textures = [];
+
+var points_l;
+var colors_l;
+var points_t;
+var texCoords_t; 
 
 var drawMode;
 
@@ -171,17 +206,30 @@ var axis = 0;
 var theta = [ 0, 0, 0 ];
 
 var movement = false;     // Do we rotate?
+var mouselook = true;
 var spinX = 0;
 var spinY = 0;
 var origX;
 var origY;
 
+var mouseX;
+var mouseY;
+
+var viewHalfX;
+var viewHalfY;
+
 //TÍMABUNDIÐ:
 var cBuffer;
 var kassi;
 
+var ppos;
+var lookdir;
+var stefna;
 
-var texCoords = [];
+var step;
+
+var look = true;
+
 var program;
 var textures;
 
@@ -194,8 +242,6 @@ var GRID_TWO = false;
 var POINTS     = 0;
 var LINES      = 1;
 var TRIANGLES  = 4;
-
-var g_textures = [];
 
 
 var zDist = -5.0;
@@ -222,8 +268,116 @@ window.onload = function init()
     //console.log( playField );
     //debugger;
 
+    starter();
+
+    //
+    // CONFIGURE TEXTURE
+    //
+    textures = texture.convertImagesToTexture( g_images );
+
+    initializeTextureMode();
+    //initializeLineMode();
+
+
+    proLoc = gl.getUniformLocation( program, "projection" );
+    mvLoc = gl.getUniformLocation( program, "modelview" );
+
+    var drMode = gl.getUniformLocation( program, "drawMode" );
+    gl.uniform2fv( drMode, flatten(vec2(1.0, 0.0)) );
+    
+    
+
+    //
+    // INITIALIZE LISTENERS
+    //
+    //event listeners for mouse
+    canvas.addEventListener("mousedown", function(e){
+        movement = true;
+        //mouselook = false;
+        origX = e.offsetX;
+        origY = e.offsetY;
+        e.preventDefault();         // Disable drag and drop
+    } );
+
+    canvas.addEventListener("mouseup", function(e){
+        movement = false;
+    } );
+
+    canvas.addEventListener("mousemove", function(e){
+
+        if( look ){
+             if(movement) {
+                spinY = ( spinY + (e.offsetX - origX) ) % 360;
+                spinX = ( spinX + (origY - e.offsetY) ) % 360;
+                origX = e.offsetX;
+                origY = e.offsetY;
+            }   
+        }else {
+            if( mouselook ) {
+                e.preventDefault();
+                e.stopPropagation();
+                stefna += (e.clientX - origX)/200;
+                if( stefna > 360.0 ) stefna -= 360.0;
+                lookdir[0] = Math.cos(stefna);
+                lookdir[2] = -Math.sin(stefna);
+
+                origX = e.clientX;
+            }
+        }
+    } );
+
+
+    canvas.addEventListener("mouseup", function(e){
+        //mouselook = true;
+    } );
+
+    
+    // Event listener for mousewheel
+     window.addEventListener("mousewheel", function(e){
+            if( e.wheelDelta > 0.0 ) {
+                ppos[2] += 1.1;
+                zDist += 1.1;
+            } else {
+                ppos[2] -= 1.1;
+                zDist -= 1.1;
+            }
+        });
+    var start = vertices.cubeIndex.start;
+    var count = vertices.cubeIndex.count;
+    geraKubb( [start, count] );
+}
+
+
+function reset(){
+    shape  = [];
+    points = [];
+    colors = [];
+    texCoords = [];
+    points_l = [];
+    colors_l = [];
+    points_t = [];
+    texCoords_t = [];
+    resetLook();
+}
+
+function resetLook(){
+    spinX = 0;
+    spinY = 0;
+    origX = 0;
+    origY = 0;
+    ppos = vec3(0.0, 0.5, -zDist); // Núverandi staðsetning leikmanns
+    lookdir = vec3(0.0, 0.0, -1.0); // Núverandi áhorfsvigur leikmanns
+    stefna = 90.0               // Upphafleg stefna leikmanns
+    step = 0.05;                // Skrefstærð hreyfingar
+}
+
+
+function starter(){
     canvas = document.getElementById( "gl-canvas" );
     
+    viewHalfX = window.innerWidth / 2;
+    viewHalfY = window.innerHeight / 2;
+
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
@@ -237,26 +391,22 @@ window.onload = function init()
     //
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
+}
 
-    /*colors.push( vec3(  0.0, 0.0, 0.0 ) );
-    colors.push( vec3(  0.0, 0.0, 0.0 ) );
-    points.push( vec3(  0.5, 0.6, 0.0 ) );
-    points.push( vec3(  0.5, -0.6, 0.0 ) );
+function initializeLocation(){
+    proLoc = gl.getUniformLocation( program, "projection" );
+    mvLoc = gl.getUniformLocation( program, "modelview" );
+}
 
-    colors.push( vec3(  0.0, 0.0, 0.0 ) );
-    colors.push( vec3(  0.0, 0.0, 0.0 ) );
-    points.push( vec3(  0.0, -0.175, 0.0 ) );
-    points.push( vec3(  0.0, 0.175, 0.0 ) );*/
 
-    /*gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );*/
+function initializeTextureMode(){
+    
+    reset();
 
-    //
-    // SELECT DRAW MODE
-    //
-    //drawMode = gl.LINES;
+
+    starter();
+
     drawMode = gl.TRIANGLES;
-
     //
     // CREATE MAP
     //
@@ -264,87 +414,72 @@ window.onload = function init()
 
 
     //
-    // CONFIGURE TEXTURE
-    //
-    textures = texture.convertImagesToTexture( g_images );
-
-
-
-    //
     // INITIALIZE BUFFERS
     //
-   /* cBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
-
-    var vColor = gl.getAttribLocation( program, "vColor" );
-    gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColor );*/
-    
-    var tBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, tBuffer);
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(texCoords), gl.STATIC_DRAW );
-    
-    var vTexCoord = gl.getAttribLocation( program, "vTexCoord" );
-    gl.vertexAttribPointer( vTexCoord, 2, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vTexCoord );
-
     kassi = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, kassi);
-    gl.bufferData(gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(points_t), gl.STATIC_DRAW);
 
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-
-    proLoc = gl.getUniformLocation( program, "projection" );
-    mvLoc = gl.getUniformLocation( program, "modelview" );
-
+    var tBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, tBuffer);
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(texCoords_t), gl.STATIC_DRAW );
     
-    //
-    // INITIALIZE LISTENERS
-    //
+    var vTexCoord = gl.getAttribLocation( program, "vTexCoord" );
+    gl.vertexAttribPointer( vTexCoord, 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vTexCoord );
 
+    var drMode = gl.getUniformLocation( program, "drawMode" );
+    gl.uniform2fv( drMode, flatten(vec2(1.0, 0.0)) );
 
-
-    //event listeners for mouse
-    canvas.addEventListener("mousedown", function(e){
-        movement = true;
-        origX = e.offsetX;
-        origY = e.offsetY;
-        e.preventDefault();         // Disable drag and drop
-    } );
-
-    canvas.addEventListener("mouseup", function(e){
-        movement = false;
-    } );
-
-    canvas.addEventListener("mousemove", function(e){
-        if(movement) {
-            spinY = ( spinY + (e.offsetX - origX) ) % 360;
-            spinX = ( spinX + (origY - e.offsetY) ) % 360;
-            origX = e.offsetX;
-            origY = e.offsetY;
-        }
-    } );
-    
-    
-
-    // Event listener for mousewheel
-     window.addEventListener("mousewheel", function(e){
-         if( e.wheelDelta > 0.0 ) {
-             zDist += 1.1;
-         } else {
-             zDist -= 1.1;
-         }
-     }  );  
-    var start = vertices.cubeIndex.start;
-    var count = vertices.cubeIndex.count;
-    geraKubb( [start, count] );
+    initializeLocation();
 }
 
 
+
+function initializeLineMode(){
+    
+    reset();
+
+    starter();
+
+    drawMode = gl.LINES;
+    //
+    // CREATE MAP
+    //
+    vertices.build();
+
+   
+    //
+    // INITIALIZE BUFFERS
+    //
+    cBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(colors_l), gl.STATIC_DRAW );
+
+    var vColor = gl.getAttribLocation( program, "vColor" );
+    gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vColor );
+
+    kassi = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, kassi);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(points_l), gl.STATIC_DRAW);
+
+    var vPosition = gl.getAttribLocation( program, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    var locColor = gl.getUniformLocation( program, "fColor" );
+    gl.uniform4fv( locColor, flatten(colors_l) );
+
+    var drMode = gl.getUniformLocation( program, "drawMode" );
+    gl.uniform2fv( drMode, flatten(vec2(0.0, 1.0)) );
+
+    initializeLocation();
+}
 
 //breytur sem hjálpa við stjórn leiksins
 var hasWon = false;
@@ -375,31 +510,19 @@ function render()
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     var ctmStack = [];
-
     var proj = perspective( 50.0, 1.0, 0.2, 100.0 );
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
-    var ctm = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+    // staðsetja áhorfanda og meðhöndla músarhreyfingu
+    if(look){
+        var ctm = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+    }else{
+        var ctm = lookAt( ppos, add(ppos, lookdir), vec3(0.0, 1.0, 0.0));
+    }
     ctm = mult( ctm, rotate( parseFloat(spinX), [1, 0, 0] ) );
     ctm = mult( ctm, rotate( parseFloat(spinY), [0, 1, 0] ) );
     ctm = mult( ctm, scale4(0.3,0.3,0.3));
     
-    //RENDER GRID
-    ctmStack.push( ctm );
-        vertices.renderGrid(ctm, mvLoc);
-    ctm = ctmStack.pop();
-    
-    
-    //RENDER EARTH
-    ctmStack.push( ctm );
-        vertices.renderGround(ctm, mvLoc);
-    ctm = ctmStack.pop();
-
-
-    //RENDER GRIDPOINTS
-    ctmStack.push( ctm );
-        vertices.renderGrid(ctm, mvLoc);
-    ctm = ctmStack.pop();
 
 
     //RENDER WORLD
@@ -407,6 +530,28 @@ function render()
         vertices.renderWorld(ctm, mvLoc);
     ctm = ctmStack.pop();
 
+    ctmStack.push( ctm );
+        vertices.renderGroundSurface(ctm, mvLoc);
+    ctm = ctmStack.pop();
+    
+    
+    //translate tetris playground
+    ctm = mult( ctm, translate([0.0, 1.0, 0.0]));
+
+    //RENDER GRID
+    ctmStack.push( ctm );
+        vertices.renderGrid(ctm, mvLoc);
+    ctm = ctmStack.pop();
+    
+    //RENDER EARTH
+    ctmStack.push( ctm );
+        vertices.renderGround(ctm, mvLoc);
+    ctm = ctmStack.pop();
+
+    //RENDER GRIDPOINTS
+    ctmStack.push( ctm );
+        vertices.renderGrid(ctm, mvLoc);
+    ctm = ctmStack.pop();
 
     //RENDER CUBES
     for(var i = 0; i<kubbar.length; i++){

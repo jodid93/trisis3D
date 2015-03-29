@@ -60,6 +60,7 @@ Hexahedron.prototype.t_textures;
 //color mode
 Hexahedron.prototype.l_colors__;
 
+Hexahedron.prototype.texCopies;
 
 //Fastar
 Hexahedron.prototype.LINE     = 1; //gl.LINES
@@ -71,6 +72,8 @@ Hexahedron.prototype.reset = function(){
     this.drawMode   = [];
 
     this.vertices   =  0;
+
+    this.texCopies = 1;
     
     this.t_points   = [];
     this.t_textur   = [];
@@ -215,7 +218,8 @@ Hexahedron.prototype.getColor = function( ){
 
 
 //return a texture coordinate of a square
-Hexahedron.prototype.getTexture = function( ){    
-    return [vec2(0, 0), vec2(0, 1),
-            vec2(1, 1), vec2(1, 0)];
+Hexahedron.prototype.getTexture = function(  ){    
+    return [vec2(0, 0), vec2(0, this.texCopies),
+            vec2(this.texCopies, this.texCopies), 
+            vec2(this.texCopies, 0)];
 };

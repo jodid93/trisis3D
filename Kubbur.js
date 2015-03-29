@@ -816,12 +816,13 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
 }
 
 Kubbur.prototype.draw = function(ctm, matrixLoc,x,y,z,index){
-    var start = this.arrayIndex[0];
-    var count = this.arrayIndex[1];
-    ctm1 = mult( ctm, translate( x, y, z ) );
-    gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1)); 
-    gl.activeTexture( gl.TEXTURE0 );
-    gl.bindTexture(gl.TEXTURE_2D, textures[index]);
+    var start = vertices.cubeIndex.start;
+    var count = vertices.cubeIndex.count;
+    
+    ctm1 = mult( ctm, translate( [x, y, z] ) );
 
+    gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1)); 
+
+    gl.bindTexture(gl.TEXTURE_2D, textures[index]);
     gl.drawArrays(drawMode, start, count);
 };

@@ -171,8 +171,16 @@ main.requestPreloads = function() {
         shell4   : "images/shells-04.jpg",  //4
         shell5   : "images/shells-05.jpg",  //5
         shell6   : "images/shells-06.jpg",  //6
-        wall1   : "images/shells-09.jpg",   
-        grid   : "images/shells-10.jpg"
+        wall1   : "images/moon-03.jpg",   
+        wallnx   : "images/dark-s_nx.jpg",   
+        wallny   : "images/dark-s_ny.jpg",   
+        wallnz   : "images/dark-s_nz.jpg",   
+        wallpx   : "images/dark-s_px.jpg",   
+        wallpy   : "images/dark-s_py.jpg",   
+        wallpz   : "images/dark-s_pz.jpg",   
+        grid   : "images/shells-10.jpg",
+        stone1   : "images/stone-02.jpg",
+        texTile1 : "images/woodtile27.jpg"
     };
 
     var requiredSounds = {
@@ -181,9 +189,8 @@ main.requestPreloads = function() {
     //
     //PRELOADS
     //
-    //preLoadAudio();
     imagesPreload(requiredImages, g_images, main.sortImages);
-    preLoadAudio();
+   // preLoadAudio();
     
 }
 
@@ -206,8 +213,24 @@ main.sortImages = function(){
             images[5] = g_images[image];
         }else if(g_images[image].name === 'wall1'){
             images[6] = g_images[image];
-        }else{
+        }else if(g_images[image].name === 'wallnx'){
             images[7] = g_images[image];
+        }else if(g_images[image].name === 'wallny'){
+            images[8] = g_images[image];
+        }else if(g_images[image].name === 'wallnz'){
+            images[9] = g_images[image];
+        }else if(g_images[image].name === 'wallpx'){
+            images[10] = g_images[image];
+        }else if(g_images[image].name === 'wallpy'){
+            images[11] = g_images[image];
+        }else if(g_images[image].name === 'wallpz'){
+            images[12] = g_images[image];
+        }else if(g_images[image].name === 'stone1'){
+            images[13] = g_images[image];
+        }else if(g_images[image].name === 'texTile1'){
+            images[14] = g_images[image];
+        } else if(g_images[image].name === 'grid'){
+            images[15] = g_images[image];
         }
     }
     g_images = images;

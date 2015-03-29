@@ -29,12 +29,17 @@ varying vec4 fColor;
 varying vec2 fTexCoord;
 
 uniform sampler2D texture1;
+uniform vec2 drawMode;
 
 void
 main()
 {
-    vec4 color1  = texture2D( texture1, fTexCoord ); 
-    gl_FragColor = color1;
+    if( drawMode[0] == 1.0 ){
+        vec4 color1  = texture2D( texture1, fTexCoord ); 
+        gl_FragColor = color1;
+    } else {
+        gl_FragColor = fColor;
+    }
 }
 </script>
 
@@ -51,6 +56,7 @@ main()
 <script type="text/javascript" src="Audio.js"></script>
 <script type="text/javascript" src="Hexahedron.js"></script>
 <script type="text/javascript" src="Square.js"></script>
+<script type="text/javascript" src="pinski.js"></script>
 <script type="text/javascript" src="Shapes.js"></script>
 <script type="text/javascript" src="vertices.js"></script>
 <script type="text/javascript" src="texture.js"></script>

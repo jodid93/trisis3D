@@ -1,17 +1,20 @@
 var texture = {
-	
-	storage: [],
+    
+    storage: [],
 
-	convertImagesToTexture: function( images ){
+    convertImagesToTexture: function( images ){
+        var counter = 0;
         for( var image in images){
-			this.storage.push( this.configureTexture( images[image] ) );
-		}
-        this.activeTexture();
+            this.storage.push( this.configureTexture( images[image], counter ) );
+            counter++;
+        }
+       // this.activeTexture();
+        gl.uniform1i(gl.getUniformLocation(program, "texture1"), 0);
         return this.storage;
-	},
-
-	//procces a image to a fully texture
-    configureTexture: function( image ) {
+    },
+    
+    //procces a image to a fully texture
+    configureTexture: function( image, index ) {
         texture = gl.createTexture();
         gl.bindTexture( gl.TEXTURE_2D, texture );
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -30,10 +33,16 @@ var texture = {
     //in the fragment-shader (trisis.html)
     activeTexture: function(){        
         // gl[("TEXTURE" + 0)] => gl.TEXTURE0
+
+       // console.log( this.storage );        
+
         for(var i=0; i<this.storage.length; i++){
             gl.activeTexture( gl[("TEXTURE" + i)] );
             gl.bindTexture(gl.TEXTURE_2D, this.storage[i]);
         }
+/*
+        console.log( this.storage );
+        debugger;*/
         
         /*gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, this.storage[2]);

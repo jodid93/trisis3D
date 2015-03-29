@@ -7,8 +7,11 @@ var vertices = {
 	worldIndex:     null,	
 	groundIndex:    null,
 	pointGridIndex: null,	
+	groundSurfaceIndex: null,	
 
 	build: function( ){
+    	this.reset();
+    	this.groundSurfaceIndex = this.makeGroundSurface( );
     	this.worldIndex = this.makeWorld( );
 		this.gridIndex = this.makeGrid( );
     	this.cubeIndex = this.makeCube(  );
@@ -17,14 +20,18 @@ var vertices = {
     	this.pushVertices( );
 	},
 
+	reset: function( ){
+		this.shape = new Shapes();
+	},
+
 	pushVertices: function(){
 	    if( drawMode === gl.LINES ){
-	        points = points.concat( this.shape.l_points );
-	        colors = colors.concat( this.shape.l_colors );
+	        points_l = points.concat( this.shape.l_points );
+	        colors_l = colors.concat( this.shape.l_colors );
 	    } else
 	    if( drawMode === gl.TRIANGLES ){
-	        points = points.concat( this.shape.t_points );
-	        texCoords = texCoords.concat( this.shape.t_textur );
+	        points_t = points.concat( this.shape.t_points );
+	        texCoords_t = texCoords.concat( this.shape.t_textur );
 	    }
 	    //texCoords = texCoords.concat( this.shape.t_textur); 
 	},
@@ -84,7 +91,6 @@ var vertices = {
     	}), "cube");
 	},
 
-
 	
 	makeGround: function( ){
 	    return this.add( new Square(
@@ -93,9 +99,9 @@ var vertices = {
 	        red: 0.0,
 	        blue: 0.0,
 	        green: 1.0,
-	        xAxisSize: 1.0,
-	        yAxisSize: 1.0,
-	        zAxisSize: 1.0
+	        xAxisSize: 1.5,
+	        yAxisSize: 1.5,
+	        zAxisSize: 1.5
 		}), "ground");
 	},
 
@@ -107,9 +113,23 @@ var vertices = {
 	        blue: 0.0,
 	        green: 1.0,
 	        xAxisSize: 50.0,
-	        yAxisSize: 40.0,
+	        yAxisSize: 50.0,
 	        zAxisSize: 50.0
 		}), "world");
+	},
+
+	makeGroundSurface: function( ){
+		return this.add( new Square(
+		{
+            drawMode: {POINTS: false, LINES: true, TRIANGLES: true},
+	        red: 0.0,
+	        blue: 0.0,
+	        green: 1.0,
+	        xAxisSize: 50.0,
+	        yAxisSize: 50.0,
+	        zAxisSize: 0.0,
+	        texCopies: 30
+		}), "groundSurface");
 	},
 
 	//puts a shape into a shape keeper that returns
@@ -126,7 +146,7 @@ var vertices = {
 		ctm = mult( ctm, translate([0.0, 0.12, 0.0]));	
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
-		gl.uniform1i(gl.getUniformLocation(program, "texture1"), 8);
+    	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
 	
 		var start1 = this.gridIndex.start;
 		var count1 = this.gridIndex.count;
@@ -157,23 +177,69 @@ var vertices = {
 		var start = this.groundIndex.start;
 		var count = this.groundIndex.count;
 
-        ctm = mult( ctm, translate([0.0, -3.9, 0.0]));
-        ctm = mult( ctm, scale4( 5.0,1.0,5.0));
+        ctm = mult( ctm, translate([0.0, -3.35, 0.0]));
+        ctm = mult( ctm, scale4( 1.2, 1.0, 1.2));
         ctm = mult( ctm, rotate( 90, [ 1, 0, 0]));
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
-		gl.uniform1i(gl.getUniformLocation(program, "texture1"), 3);
+    	
+    	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
 		gl.drawArrays(drawMode, start, count);
 	},
 
 	renderWorld: function( ctm, matrixLoc ){
-		var start = this.worldIndex.start;
-		var count = this.worldIndex.count;
+		var start1 = this.worldIndex.start;
+		var count1 = this.worldIndex.count;
+
+		count2 = count1 * 1/6;
+
+		start2 = start1 + count2*1;
+		start3 = start1 + count2*2;
+		start4 = start1 + count2*3;
+		start5 = start1 + count2*4;
+		start6 = start1 + count2*5;
+		start7 = start1 + count2*6;
 		
-		ctm = mult(ctm, translate([0.0,35.0,0.0]));
+		ctm = mult(ctm, translate([0.0, 46.0, 0.0]));
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
-		gl.uniform1i(gl.getUniformLocation(program, "texture1"), 6);
-		gl.drawArrays(gl.TRIANGLES, start, count);
+    
+		//Framan
+    	gl.bindTexture(gl.TEXTURE_2D, textures[6]);
+		gl.drawArrays(drawMode, start1, count2);
+		
+		//vinstri
+    	gl.bindTexture(gl.TEXTURE_2D, textures[6]);
+		gl.drawArrays(drawMode, start2, count2);
+		
+		// Teikna ekki bottninn
+
+		//þakið
+    	gl.bindTexture(gl.TEXTURE_2D, textures[11]);
+		gl.drawArrays(drawMode, start4, count2);
+		
+		//Aftan
+    	gl.bindTexture(gl.TEXTURE_2D, textures[10]);
+		gl.drawArrays(drawMode, start5, count2);
+		
+		//Hægri
+    	gl.bindTexture(gl.TEXTURE_2D, textures[9]);
+		gl.drawArrays(drawMode, start6, count2);
+	},
+
+	renderGroundSurface: function( ctm, matrixLoc ){
+		var start = this.groundSurfaceIndex.start;
+		var count = this.groundSurfaceIndex.count;
+
+		ctm = mult( ctm, translate([0.0, -3.9, 0.0]));
+		ctm = mult( ctm, rotate(90, [1.0, 0.0, 0.0]));
+
+
+
+		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
+
+    	gl.bindTexture(gl.TEXTURE_2D, textures[14]);
+		gl.drawArrays(drawMode, start, count);
+		
 	}
 };
