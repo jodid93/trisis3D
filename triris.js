@@ -309,8 +309,16 @@ window.onload = function init()
              if(movement) {
                 spinY = ( spinY + (e.offsetX - origX) ) % 360;
                 spinX = ( spinX + (origY - e.offsetY) ) % 360;
+
+                //so you are not able to see outside of our skybox
+                if(spinX > 10){
+                    spinX = 10;
+                }else if(spinX <-180){
+                    spinX = -180;
+                }
                 origX = e.offsetX;
                 origY = e.offsetY;
+                //console.log(spinX)
             }   
         }else {
             if( mouselook ) {
