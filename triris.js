@@ -115,12 +115,12 @@ function checkForFumble(du){
             }
         }
         if(flag === true){
-           // g_audio.fumble.Play();
+            g_audio.fumble.Play();
             index = i;
             clearFloor(i,du);
             score += 10;
 
-            if((score%10) === 0){
+            if((score%50) === 0){
                 level++;
             }
         }

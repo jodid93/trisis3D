@@ -190,7 +190,7 @@ main.requestPreloads = function() {
     //PRELOADS
     //
     imagesPreload(requiredImages, g_images, main.sortImages);
-   // preLoadAudio();
+    
     
 }
 
@@ -236,6 +236,7 @@ main.sortImages = function(){
     g_images = images;
     console.log(images,g_images);
 
+    preLoadAudio();
     main.preloadDone();
 }
 
@@ -248,7 +249,6 @@ main.preloadDone = function() {
     //log1(g_images);
 
     //console.log( "halllsdfsdkdsfjksdfæjkskædjfl");
-
     main.init();
 }
 

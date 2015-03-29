@@ -65,6 +65,7 @@ Sound.prototype.Play = function (){
 	if( this.storeVolume !== 0 ){
 		//if this sound is still playing, 
 		//we clone this sound and play it
+		console.log('playeing' );
 		if(this.sound.currentTime > 0 && this.cloneNodes < 2)
 		{
 			this.cloneNodes++;
