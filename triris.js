@@ -1,24 +1,21 @@
 "use strict"
 
-////////////////////////////////////////////////////////////////////////////
-//              RENDER
-////////////////////////////////////////////////////////////////////////////
-
-
-//////////////////////////////////////////////////////////////////////////7///
-//              UPDATE SIMULATION Leikurinn sjálfur
-//////////////////////////////////////////////////////////////////////////////
-
+//playField is a 3D boolean array to keep track of all the blocks
 var playField;
-//hér eru allir kubbar geymdir
+//this is where all the instances of blockes are stored
 var kubbar = [];
 var score = 0;
 var level = 1;
+//this variable is used to generate a new block if the game is restarted
+var restart = false;
 
-//function til að initialize-a nýjan orm
+//function to initialize a new block
 function geraKubb( drawArrayIndex ) {
+    //a random variable choosese between the two types of blocks
     if(Math.random()>0.5){
 
+        //the location variables hold the position of the three unit
+        //blocks in the Playfield array
         kubbar.push(new Kubbur({
                 type: 1,
                 size: 3,
@@ -38,28 +35,48 @@ function geraKubb( drawArrayIndex ) {
 };
 
 
-//fall sem sér um að uppfæra alla hlutina í leiknum*/
+//function to update all the game locic. engine.js calls this function
 function updateSimulation(du) {
+
+    //write out the score and level onto the web page
     document.getElementById("Score").innerHTML = score;
     document.getElementById("Level").innerHTML = level;
-    var flow = false;
    
-    if( startGame ){   
+
+   //initialize a new block if the game is restarted
+   if(restart){
+    geraKubb( );
+    restart = false;
+   }
+
+   if( startGame ){
+       //go through all the blocks and update them.
+       //each block returns a signal telling us what needs to be done next.
         for(var i = 0; i<kubbar.length; i++){
             var stateOfBlock = kubbar[i].update(du)
             
+            //if the state is 1 the block has landed and we need to make 
+            //another block
             if(stateOfBlock === 1){
-                checkForFumble(du);
-                geraKubb( );
 
+                //this function checks to see if we have scored any points
+                //by making a fumble
+                checkForFumble(du);
+
+                //logic for the new block
+                geraKubb();
+                
+            //if the state is -1 that means that all 3 of the unit
+            //blocks with in a block have been destroyd, meaning that
+            //we can now get rid of that block alltogether
             }else if(stateOfBlock === -1){
-               
                 kubbar.splice(i,1);
                 i--;
-                
             }
         }
     }
+
+    //various graphical options for debugging and such
     if(  eatKey(G) ){ 
         gridPoints = !gridPoints;
     }
@@ -76,11 +93,12 @@ function updateSimulation(du) {
         initializeLineMode();
     }
 
+
     if( eatKey( KEY_ENTER ) ) {
         startGame = true;
+        startIntro = true;
         initializeTextureMode();
     }
-
 
 
    /* if(  eatKey( KEY_UP ) ){ //UP
@@ -102,14 +120,23 @@ function updateSimulation(du) {
      if( eatKey( M )){
         look = !look;
        // mouselook = !mouselook;
-        resetLook();
-     }*/
-    //console.log(playField[0][3][3]);
+        resetLook();*/
+
 }
 
+//this function goes through the Playfield and checks if there is 
+//a row that contains only true values. if so we have a fumble
 function checkForFumble(du){
+
+    //flag and index are used to mark the floor to fumble
     var flag = true;
     var index = 0;
+    //currentScore is a variable used to keep track of our score 
+    //from the current fumble in order to do combos if you fumble
+    //multiple rows
+    var currentScore = 0;
+
+    //check the floors
     for(var i = 0; i <22; i++){
         for(var u = 0; u <6; u++){
             for(var o = 0; o <6 ; o++){
@@ -118,33 +145,95 @@ function checkForFumble(du){
                 }
             }
         }
+        //if we find a fumble we clear that floor and update our currentScore
         if(flag === true){
-           // g_audio.fumble.Play();
+            
+            currentScore += 10;
             index = i;
             clearFloor(i,du);
-            score += 10;
 
-            if((score%10) === 0){
-                level++;
-            }
         }
         flag  = true;
     }
 
-    //console.log(playField[0][3][3]);
+    //various scoring options based on how many rows you managed to fumble
+    if(currentScore === 10){
+
+        score += 10;
+        //check if the level increases (this is the same for the other options)
+        if((score%50) === 0){
+            level++;
+            if(soundFX){
+                g_audio.levelUp.Play();
+            }
+        }else{
+            if(soundFX){
+                g_audio.fumble.Play();
+            }
+        }
+    }else if(currentScore === 20){
+        //fumbl is used to play only one sound if we have multiple fumbles
+        var fumbl = true;
+        //we need to update the score 10 points at a time in order to check 
+        //if we have updated the level
+        for(var i = 0; i<3; i++){
+
+            score += 10;
+            if((score%50) === 0){
+                level++;
+                if(soundFX){
+                    g_audio.levelUp.Play();
+                }
+                fumbl = false;
+            }
+        }
+        if(fumbl){ 
+            if(soundFX){
+
+                g_audio.fumble.Play();
+            }
+        }
+    }else if(currentScore === 30){
+        //same as above
+        var fumbl = true;
+        for(var i = 0; i<6; i++){
+
+            score += 10;
+            if((score%50) === 0){
+                level++;
+                if(soundFX){
+                    g_audio.levelUp.Play();
+                }
+                fumbl = false;
+            }
+        }
+        if(fumbl){ 
+            if(soundFX){
+                g_audio.fumble.Play();
+            }
+        }
+    }
 }
 
+//clearFloor clears a floor that has all it's values in Playfield marked as True
 function clearFloor(u,du){
+    //go through all the blocks to mark the blocks that share in the marked floor
     for(var i = 0; i<kubbar.length; i++){
+
+        //mark all the block as false in order to re-order them without collision
         kubbar[i].landed = false;
         playField[kubbar[i].location1[0]][kubbar[i].location1[1]][kubbar[i].location1[2]] = false;
         playField[kubbar[i].location2[0]][kubbar[i].location2[1]][kubbar[i].location2[2]] = false;
         playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = false;
 
+        //go thruogh all the unit blocks in a block and demark them if they share in the marked floor
         if(kubbar[i].location1[1] === u && kubbar[i].block1Alive){
             kubbar[i].block1Alive = false;
             
+            //and then reduce the size of the block
             kubbar[i].size--;
+
+        //if it does not share in the floor but is above it then we take it down one floor
         }else if(kubbar[i].location1[1] < u){
             kubbar[i].location1[1]++;
         }
@@ -164,8 +253,9 @@ function clearFloor(u,du){
         }else if(kubbar[i].location3[1] < u){
             kubbar[i].location3[1]++;
         }
-        console.log(kubbar[0]);
     }
+
+    //go through all the blocks that are still alive and mark them true again
     for(var i = 0; i<kubbar.length; i++){
         if(kubbar[i].block1Alive){
 
@@ -182,10 +272,11 @@ function clearFloor(u,du){
 
 
 //
-// GLOBAL VARIABLES
+// GLOBAL VARIABLES (mainly used for the graphics)
 //
 var canvas;
 var gl;
+var g_ctx;
 
 var NumVertices  = 24;
 
@@ -224,6 +315,8 @@ var startGameSpinX = 0;
 
 var mouseX;
 var mouseY;
+
+var startIntro = false;
 
 var viewHalfX;
 var viewHalfY;
@@ -264,6 +357,7 @@ var mvLoc;
 
 window.onload = function init()
 {
+    //initialize our playfield
     playField = new Array();
 
     for(var i = 0; i<6; i++){
@@ -278,35 +372,7 @@ window.onload = function init()
         }
     }
 
-    //console.log( playField );
-    //debugger;
 
-   /* startScreen.build();
-
-    startScreen.render();
-
-    debugger;*/
-
-    //var canvas1  document.getElementById('gl-canvas');
-   // var ctx = canvas.getContext('2d');
-
-/*    ctx.fillStyle = "#333333";  // This determines the text colour, it can take a hex value or rgba value (e.g. rgba(255,0,0,0.5))
-    ctx.textAlign = "center";   // This determines the alignment of text, e.g. left, center, right
-    ctx.textBaseline = "middle";    // This determines the baseline of the text, e.g. top, middle, bottom
-    ctx.font = "12px monospace";
-
-    ctx.fillText("HTML5 Rocks!", canvas.width/2, canvas.height/2);
-*/
-
-
-
-   // starter( );
-
-   /* var shape = new Shape();
-    shape.insertShape( new Octahedron() );
-    while( !startGame ){
-
-    }*/
 
     //
     // CONFIGURE TEXTURE
@@ -316,6 +382,7 @@ window.onload = function init()
     //initializeTextureMode();
     initializeLineMode();
 
+    textures = texture.convertImagesToTexture( g_images );
 
    // proLoc = gl.getUniformLocation( program, "projection" );
    // mvLoc = gl.getUniformLocation( program, "modelview" );
@@ -331,7 +398,6 @@ window.onload = function init()
     //event listeners for mouse
     canvas.addEventListener("mousedown", function(e){
         movement = true;
-        //mouselook = false;
         origX = e.offsetX;
         origY = e.offsetY;
         e.preventDefault();         // Disable drag and drop
@@ -347,9 +413,16 @@ window.onload = function init()
              if(movement) {
                 spinY = ( spinY + (e.offsetX - origX) ) % 360;
                 spinX = ( spinX + (origY - e.offsetY) ) % 360;
-                console.log( spinX );
+
+                //so you are not able to see outside of our skybox
+                if(spinX > 10){
+                    spinX = 10;
+                }else if(spinX <-180){
+                    spinX = -180;
+                }
                 origX = e.offsetX;
                 origY = e.offsetY;
+                //console.log(spinX)
             }   
         }else {
             if( mouselook ) {
@@ -385,7 +458,7 @@ window.onload = function init()
     geraKubb(  );
 }
 
-
+//resets our buffers for reinitialization
 function reset(){
     shape  = [];
     points = [];
@@ -398,6 +471,7 @@ function reset(){
     resetLook();
 }
 
+//fix our look to the default starting position
 function resetLook(){
     spinX = 0;
     spinY = 0;
@@ -409,7 +483,24 @@ function resetLook(){
     step = 0.05;                // Skrefstærð hreyfingar
 }
 
+//basic
+function resetPlayfield(){
+    playField = new Array();
 
+    for(var i = 0; i<6; i++){
+        playField[i] = new Array();
+        for(var u = 0; u<22; u++){
+            playField[i][u] = new Array();
+            for(var o = 0; o<6; o++){
+                playField[i][u][o] = new Array();
+                playField[i][u][o] = false;
+
+            }
+        }
+    }
+}
+
+//initialize our shaders
 function starter(){
     canvas = document.getElementById( "gl-canvas" );
     
@@ -433,7 +524,7 @@ function initializeLocation(){
     mvLoc = gl.getUniformLocation( program, "modelview" );
 }
 
-
+//balic
 function initializeTextureMode(){
     
     reset();
@@ -446,8 +537,6 @@ function initializeTextureMode(){
     // CREATE MAP
     //
     vertices.build();
-
-    textures = texture.convertImagesToTexture( g_images );
 
     //
     // INITIALIZE BUFFERS
@@ -475,7 +564,7 @@ function initializeTextureMode(){
 }
 
 
-
+//a function that is used for a different graphical mode
 function initializeLineMode(){
     
     reset();
@@ -539,9 +628,7 @@ function scale4( x, y, z )
 }
 
 
-
-
-
+//teikna skjámynd
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -619,4 +706,11 @@ function render()
     else if ( gameOver ){
         console.log( "game over ...")
     }
+
+    if(hasWon){
+        ctmStack.push(ctm);
+            vertices.renderPlank(ctm, mvLoc, spinY )
+        ctm = ctmStack.pop();
+    }
+
 }

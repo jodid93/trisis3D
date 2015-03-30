@@ -10,7 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 //      ENGINE
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+var muted = false;
+var soundFX = true;
 
 var main = {
     
@@ -51,33 +52,45 @@ var Restart = keyCode('R');
 var pause = false;
 main._iterCore = function (dt) {
     
-    //ef maður er búinn að fá 10 stig þá er maður
-    //búinn að vinna
     if(eatKey(P)){
         pause = !pause;
     }
-   /* if (hasWon ) {
+
+    if(eatKey(M)){
+        muted = !muted;
+        if(!muted){
+            g_audio.theme.playSound();
+        }
+    }
+
+    if(muted){
+        g_audio.theme.Pause();
+    }
+
+    if(eatKey(FX)){
+        soundFX = !soundFX;
+    }
+    if (hasWon ) {
 
         //þá er keyrður tómur skjár
-        blankScreen();
+        render();
 
         //ef það er ýtt á R þá endurstillist leikurinn
         if(keys[Restart]){
+            score = 0;
+            level = 1;
+            restart = true;
+            kubbar = [];
+            resetLook();
+            resetPlayfield();
             hasWon = false;
-            loa.stig = 0;
-            loa.dir = 1;
-            loa.cx = 256;
-            loa.cy = 256;
         }
-        return;
-    }*/
+    }
     
     if(!pause && !hasWon){
 
         //uppfæri alla logic
         update(dt);
-    }else{
-        //console.log('you lost');
     }
 
     //teikna allt
@@ -147,6 +160,7 @@ main._requestNextIteration = function () {
 main.init = function () {
     
     //bið um næsta glugga
+
     this._requestNextIteration();
 };
 
@@ -180,17 +194,14 @@ main.requestPreloads = function() {
         wallpz   : "images/dark-s_pz.jpg",   
         grid   : "images/shells-10.jpg",
         stone1   : "images/stone-02.jpg",
-        texTile1 : "images/woodtile27.jpg"
+        texTile1 : "images/woodtile27.jpg",
+        gameOver: "images/gameOver.jpg"
     };
-
-    var requiredSounds = {
-        fumble: "sounds/fumble.ogg"
-    }
     //
     //PRELOADS
     //
     imagesPreload(requiredImages, g_images, main.sortImages);
-   // preLoadAudio();
+    
     
 }
 
@@ -231,23 +242,18 @@ main.sortImages = function(){
             images[14] = g_images[image];
         } else if(g_images[image].name === 'grid'){
             images[15] = g_images[image];
+        }else if(g_images[image].name === 'gameOver'){
+            images[16] = g_images[image];
         }
     }
     g_images = images;
-    console.log(images,g_images);
 
+    //load the audio
+    preLoadAudio();
     main.preloadDone();
 }
 
-//var g_sprites = [];
 main.preloadDone = function() {
-
-    //for(var image in g_images) {
-    //    g_sprites[image] = new Sprite(g_images[image], image);
-    //}
-    //log1(g_images);
-
-    //console.log( "halllsdfsdkdsfjksdfæjkskædjfl");
 
     main.init();
 }
@@ -256,6 +262,3 @@ main.preloadDone = function() {
 
 // Kick it off
 main.requestPreloads();
-////////////////////////////////////////////////////////////////////////////
-//              ENDIR Á ENGINE
-////////////////////////////////////////////////////////////////////////////

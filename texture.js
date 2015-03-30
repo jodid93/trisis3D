@@ -8,7 +8,6 @@ var texture = {
             this.storage.push( this.configureTexture( images[image], counter ) );
             counter++;
         }
-       // this.activeTexture();
         gl.uniform1i(gl.getUniformLocation(program, "texture1"), 0);
         return this.storage;
     },
@@ -25,35 +24,4 @@ var texture = {
         return texture;
     },
 
-    //LAGA: það þarf að setja texture dót í fragment-sh.
-    //      skoðum það þegar það er komið á hreint hvernig
-    //      best er að vinna texture-ið (local-host...)
-
-    //Activate all texture, all texture is stored
-    //in the fragment-shader (trisis.html)
-    activeTexture: function(){        
-        // gl[("TEXTURE" + 0)] => gl.TEXTURE0
-
-       // console.log( this.storage );        
-
-        for(var i=0; i<this.storage.length; i++){
-            gl.activeTexture( gl[("TEXTURE" + i)] );
-            gl.bindTexture(gl.TEXTURE_2D, this.storage[i]);
-        }
-/*
-        console.log( this.storage );
-        debugger;*/
-        
-        /*gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.storage[2]);
-
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.storage[3]);*/
-
-        /*gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, this.storage[1]); */
-        // .
-        // .
-        // .
-    }
 };

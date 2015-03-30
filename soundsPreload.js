@@ -1,20 +1,11 @@
 // Multi-Audio Preloader
+//based on a preloader from Patric Kerr in accociation with the course tölvuleikja forritun
 
 "use strict";
 
-/*jslint browser: true, devel: true, white: true */
-
-/*var canvas = document.getElementById("myCanvas");
-var s_ctx = canvas.getContext("2d");*/
-
-/*
-0        1         2         3         4         5         6         7         8
-12345678901234567890123456789012345678901234567890123456789012345678901234567890
-*/
-
 Audio.prototype.asyncLoad = function(src, asyncCallback) {
 
-	//this.onloadeddata		= asyncCallback;
+	//this.onloadeddata		= main.spilaTheme();
 	//this.oncanplay 		= asyncCallback;
 	//this.canplay 			= asyncCallback;
     this.oncanplaythrough   = asyncCallback;

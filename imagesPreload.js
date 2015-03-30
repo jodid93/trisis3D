@@ -2,15 +2,7 @@
 
 "use strict";
 
-/*jslint browser: true, devel: true, white: true */
-
-/*var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");*/
-
-/*
-0        1         2         3         4         5         6         7         8
-12345678901234567890123456789012345678901234567890123456789012345678901234567890
-*/
+//based on an image preloader from Patric Kerr in accociation with the course tölvuleikja forritun
 
 // Extend the Image prototype (aka augment the "class") 
 // with my asyncLoad wrapper. 
@@ -129,5 +121,5 @@ function imagesPreload(requiredImages,
             currentImage.asyncLoad(requiredImages[currentName], preloadHandler);
         }
     }
-    
+
 }

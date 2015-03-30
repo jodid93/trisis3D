@@ -31,12 +31,8 @@ Sound.prototype.themeSongConstruction = function( name ){
 	this.name = name;
 	this.mute = false;
 	this.highVolume = 1;
-	if(String(name).indexOf("rust")){
-		this.lowVolume = 0.3;
-	}
-	else{
-		this.lowVolume = 0.1;
-	}
+	this.lowVolume = 0.1;
+	
 };
 
 
@@ -106,6 +102,10 @@ Sound.prototype.reset = function (){
 	return time;
 };
 
+Sound.prototype.Pause = function (){
+	this.sound.pause();
+};
+
 
 Sound.prototype.playOnVolume = function ( volume ){
 	var time = this.reset();
@@ -120,6 +120,10 @@ Sound.prototype.playAt = function ( time, volume ){
 	this.sound.soundVolume( volume );
 	this.sound.currentTime = time;
 	this.sound.playSound();
+};
+
+Sound.prototype.render = function(){
+	this.sound.play();
 };
 
 
@@ -174,7 +178,8 @@ function muteTrigger( bool ){
 
 //Plays theme sound in wich game sate is on
 function playThemeSong() {
-	var vol = g_audio.themeGame.lowVolume;
+	//var vol = g_audio.themeGame.lowVolume;
+	//g_audio.theme.play();
 	/*if( !g_audio.themeGame.mute &&  ){
 		if( startScreen.isVisible() && !g_gameOver && !g_gameWon)
 		{
@@ -209,13 +214,19 @@ function playThemeSong() {
 //
 var requiredSounds = {
 	//GAMEPLAY SOUND
-	fumble	: "sounds/fumble.ogg"
+	fumble	: "sounds/fumble.ogg",
+	levelUp:"sounds/levelUp.ogg",
+	theme: "sounds/Theme.ogg",
+	shift: "sounds/shift.ogg",
+	fall: "sounds/fall.ogg",
+	thump: "sounds/thump.ogg"
 };
 
 
 var g_sounds = [];
 
 function preLoadAudio() {
+	console.log(requiredSounds)
 	soundsPreload(requiredSounds, g_sounds, audioPreloadDone);
 }
 
@@ -229,6 +240,6 @@ function audioPreloadDone() {
 	for(var sound in g_sounds) {
 		g_audio[sound] = new Sound(g_sounds[sound], sound);
 	}
-	//playThemeSong();
+	//g_audio.theme.playSound();
 }
 

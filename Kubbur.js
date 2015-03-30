@@ -1,10 +1,13 @@
-//function sem skilgreinir Orma "klasann"
+//function that defines the Kubbur class
 function Kubbur(descr) {
     for (var property in descr) {
         this[property] = descr[property];
     }
 }
 
+//falling is used to controll the sound that comes when you press
+//spaceBar. that is, sees to that the sound only plays once
+var falling = 0;
 // Initial, inheritable, default values
 Kubbur.prototype.size;
 Kubbur.prototype.location1;
@@ -23,7 +26,7 @@ Kubbur.prototype.block3Alive = true;
 
 //CONSTANT
 
-//fall til að uppfæra kubba
+//update the cube
 Kubbur.prototype.update = function (du) {
     
     //kill me now value
@@ -32,27 +35,39 @@ Kubbur.prototype.update = function (du) {
     }
     this.time += du;
 
+    //start by removing the block from the playfield
     playField[this.location1[0]][this.location1[1]][this.location1[2]] = false;
     playField[this.location2[0]][this.location2[1]][this.location2[2]] = false;
     playField[this.location3[0]][this.location3[1]][this.location3[2]] = false;
 
-    //check for rotations
+    //check for rotations.
+    //there are many cases due to the many different directions the blocks can rotate in.
+    //these are all quite simple by them selfs so i will only explain the first case for
+    //type one of the blocks(the long one). to skip this go to line 658
     if(keys[A]&& this.active){
-
+        if(soundFX){
+            g_audio.shift.Play();
+        }
 
         if(this.type === 1){
 
             if(this.state === 1){
                 console.log("case 1, type 1, A");
+
+                //check to see if the rotations would go outside our playfield in whitch case wo don't
+                //allow for the rotation. and then check if the disired new location has any block occupying them
                 if(this.location2[2]-1 >= 0 && this.location2[2]+1 <= 5 &&
                     playField[this.location2[0]][this.location2[1]][this.location2[2]+1] === false&&
                     playField[this.location2[0]][this.location2[1]][this.location2[2]-1] === false){
 
+                    //if the condition above hold then we move the block
                     this.location1[2]--;
                     this.location1[1] = this.location2[1];
                     this.location3[2]++;
                     this.location3[1] = this.location2[1];
                     this.state = 2;
+
+                    //lastly set the key to false so that it doesn't rotate like crazy.
                     keys[A] = false;
                 }
             }
@@ -241,6 +256,9 @@ Kubbur.prototype.update = function (du) {
 
     if(keys[S]&& this.active){
 
+        if(soundFX){
+            g_audio.shift.Play();
+        }
 
         if(this.type === 1){
 
@@ -433,6 +451,9 @@ Kubbur.prototype.update = function (du) {
 
     if(keys[D]&& this.active){
 
+        if(soundFX){
+            g_audio.shift.Play();
+        }
 
         if(this.type === 1){
 
@@ -636,7 +657,7 @@ Kubbur.prototype.update = function (du) {
     }
 
 
-    //check for movements
+    //check for movements. this works in the same way as the checks above
     if(keys[left]&& this.active){
 
         console.log("A")
@@ -690,13 +711,24 @@ Kubbur.prototype.update = function (du) {
         }
     }
 
+    //check if the block has landed
     this.checkBottom();
     
+    //if we press space then we decrease the time so that it falls really fast
     if(keys[space]){
         var time = 1;
+        falling ++;
+        if(soundFX&&falling===1){
+            g_audio.fall.Play();
+            
+        }
     }else{
+        //the time it takes the block to fall down is dependent on the level youre on
         time = (100-(10*level));
+        falling = 0;
     }
+
+    //if the current time of the block has gone above the limit then we make the block fall
     if(this.time > time && !this.landed){
         this.time = 0;
 
@@ -712,9 +744,10 @@ Kubbur.prototype.update = function (du) {
 
             this.location3[1]++;
         }
-        //console.log('dropping acid bitch');
     }
 
+    //after all the logic is done and the unit blocks are still alive then we mark them
+    //as true again. possibly in a new location.
     if(this.block1Alive){
 
         playField[this.location1[0]][this.location1[1]][this.location1[2]] = true;
@@ -728,26 +761,37 @@ Kubbur.prototype.update = function (du) {
         playField[this.location3[0]][this.location3[1]][this.location3[2]] = true;
     }
 
-    //console.log(this.signal);
+    //return the signal to let trisis.js know what to do with the blocks
     return this.signal;
 
-
-   //console.log(this.size);
 }
 
+//check if the block has landed
 Kubbur.prototype.checkBottom = function(){
     
+    //if the block is alive and it has reached the blottom or has landed on another block... 
     if((this.location1[1]+1 > 21 || playField[this.location1[0]][this.location1[1]+1][this.location1[2]] == true)&&this.block1Alive){
+        if(soundFX&&this.signal === 0){
+            g_audio.thump.Play();
+        }
+
+        //...we increment the signal to let trisis.js know that we've landed
         this.signal++;
         this.landed = true;
         this.active = false;
+
+        //check if the landed block is above the "legal" playfield
+        //in that case we stop the game.
         if(this.location1[1]<3){
             hasWon = true;
             this.signal++;
         }
-        //console.log('herna 1')
     }
+    //same as above
     else if((this.location2[1]+1 > 21 || playField[this.location2[0]][this.location2[1]+1][this.location2[2]] == true)&&this.block2Alive){
+        if(soundFX&&this.signal === 0){
+            g_audio.thump.Play();
+        }
         this.signal++;
         this.landed = true;
         this.active = false;
@@ -755,9 +799,13 @@ Kubbur.prototype.checkBottom = function(){
             hasWon = true;
             this.signal++;
         }
-        //console.log('herna 2')
+        
     }
+    //same as above
     else if((this.location3[1]+1 > 21 || playField[this.location3[0]][this.location3[1]+1][this.location3[2]] == true)&&this.block3Alive){
+        if(soundFX&&this.signal === 0){
+            g_audio.thump.Play();
+        }
         this.signal++;
         this.landed = true;
         this.active = false;
@@ -765,18 +813,22 @@ Kubbur.prototype.checkBottom = function(){
                 hasWon = true;
                 this.signal++;
         }
-        //console.log('herna 3')
+        
     }
 }
 
 
+//render all three of the unit cubes
 Kubbur.prototype.render = function(ctm,matrixLoc){
 
+    //only render them if they are still alive
     if(this.location1[1]>1&&this.block1Alive){
 
         x = 1.25 - this.location1[0] * 0.5;
         y = 5.75 - this.location1[1] * 0.5;
         z = 1.25 - this.location1[2] * 0.5;
+
+        //choose different texture types for the different types of blocks
         if(this.type === 2){
             Ktexture = 3;
         }
@@ -786,6 +838,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         this.draw(ctm, matrixLoc, x,y,z,Ktexture);
     }
 
+    //same as above
     if(this.location2[1] > 1&&this.block2Alive){
 
         x = 1.25 - this.location2[0] * 0.5;
@@ -800,6 +853,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
         this.draw(ctm, matrixLoc, x,y,z,Ktexture);
     }
 
+    //same as above
     if(this.location3[1]>1&&this.block3Alive){
 
         x = 1.25 - this.location3[0] * 0.5;
@@ -815,6 +869,7 @@ Kubbur.prototype.render = function(ctm,matrixLoc){
     }
 }
 
+//the actual render of the cubes.
 Kubbur.prototype.draw = function(ctm, matrixLoc,x,y,z,index){
     var start = vertices.cubeIndex.start;
     var count = vertices.cubeIndex.count;
