@@ -52,8 +52,6 @@ var Restart = keyCode('R');
 var pause = false;
 main._iterCore = function (dt) {
     
-    //ef maður er búinn að fá 10 stig þá er maður
-    //búinn að vinna
     if(eatKey(P)){
         pause = !pause;
     }
@@ -93,8 +91,6 @@ main._iterCore = function (dt) {
 
         //uppfæri alla logic
         update(dt);
-    }else{
-        //console.log('you lost');
     }
 
     //teikna allt
@@ -198,7 +194,8 @@ main.requestPreloads = function() {
         wallpz   : "images/dark-s_pz.jpg",   
         grid   : "images/shells-10.jpg",
         stone1   : "images/stone-02.jpg",
-        texTile1 : "images/woodtile27.jpg"
+        texTile1 : "images/woodtile27.jpg",
+        gameOver: "images/gameOver.jpg"
     };
     //
     //PRELOADS
@@ -245,24 +242,19 @@ main.sortImages = function(){
             images[14] = g_images[image];
         } else if(g_images[image].name === 'grid'){
             images[15] = g_images[image];
+        }else if(g_images[image].name === 'gameOver'){
+            images[16] = g_images[image];
         }
     }
     g_images = images;
-    console.log(images,g_images);
 
+    //load the audio
     preLoadAudio();
     main.preloadDone();
 }
 
-//var g_sprites = [];
 main.preloadDone = function() {
 
-    //for(var image in g_images) {
-    //    g_sprites[image] = new Sprite(g_images[image], image);
-    //}
-    //log1(g_images);
-    console.log(g_audio)
-    //console.log( "halllsdfsdkdsfjksdfæjkskædjfl");
     main.init();
 }
 
@@ -270,6 +262,3 @@ main.preloadDone = function() {
 
 // Kick it off
 main.requestPreloads();
-////////////////////////////////////////////////////////////////////////////
-//              ENDIR Á ENGINE
-////////////////////////////////////////////////////////////////////////////

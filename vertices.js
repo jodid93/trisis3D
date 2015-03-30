@@ -8,9 +8,11 @@ var vertices = {
 	groundIndex:    null,
 	pointGridIndex: null,	
 	groundSurfaceIndex: null,	
+	plankIndex: null,
 
 	build: function( ){
     	this.reset();
+    	this.plankIndex = this.makePlank();
     	this.groundSurfaceIndex = this.makeGroundSurface( );
     	this.worldIndex = this.makeWorld( );
 		this.gridIndex = this.makeGrid( );
@@ -33,7 +35,6 @@ var vertices = {
 	        points_t = points.concat( this.shape.t_points );
 	        texCoords_t = texCoords.concat( this.shape.t_textur );
 	    }
-	    //texCoords = texCoords.concat( this.shape.t_textur); 
 	},
 
 	makeGrid: function( ){
@@ -91,6 +92,18 @@ var vertices = {
     	}), "cube");
 	},
 
+	makePlank: function(){
+		return this.add( new Square(
+		{
+            drawMode: {POINTS: false, LINES: true, TRIANGLES: true},
+	        red: 0.0,
+	        blue: 0.0,
+	        green: 1.0,
+	        xAxisSize: 2.,
+	        yAxisSize: 1.5,
+	        zAxisSize: 0.0
+		}), "ground");
+	},
 	
 	makeGround: function( ){
 	    return this.add( new Square(
@@ -184,6 +197,20 @@ var vertices = {
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
     	
     	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
+		gl.drawArrays(drawMode, start, count);
+	},
+
+	renderPlank: function( ctm, matrixLoc, rotationY){
+		var start = this.plankIndex.start;
+		var count = this.plankIndex.count;
+
+        ctm = mult( ctm, rotate( -rotationY-180, [ 0, 1, 0]));
+        ctm = mult( ctm, scale4( 1.2, 1.0, 1.0));
+        ctm = mult( ctm, translate([0.0, 1.0, 2.2]));
+
+		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
+    	
+    	gl.bindTexture(gl.TEXTURE_2D, textures[16]);
 		gl.drawArrays(drawMode, start, count);
 	},
 

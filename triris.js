@@ -366,7 +366,6 @@ window.onload = function init()
     textures = texture.convertImagesToTexture( g_images );
 
     initializeTextureMode();
-    //initializeLineMode();
 
 
     proLoc = gl.getUniformLocation( program, "projection" );
@@ -554,7 +553,7 @@ function initializeTextureMode(){
 }
 
 
-//ER THETTA NOTAÐ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//a function that is used for a different graphical mode
 function initializeLineMode(){
     
     reset();
@@ -667,6 +666,14 @@ function render()
     ctmStack.push( ctm );
         vertices.renderGrid(ctm, mvLoc);
     ctm = ctmStack.pop();
+
+    if(hasWon){
+
+        ctmStack.push(ctm);
+            vertices.renderPlank(ctm, mvLoc, spinY )
+        ctm = ctmStack.pop();
+    }
+
 
     //RENDER CUBES
     for(var i = 0; i<kubbar.length; i++){

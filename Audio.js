@@ -31,12 +31,8 @@ Sound.prototype.themeSongConstruction = function( name ){
 	this.name = name;
 	this.mute = false;
 	this.highVolume = 1;
-	if(String(name).indexOf("rust")){
-		this.lowVolume = 0.3;
-	}
-	else{
-		this.lowVolume = 0.1;
-	}
+	this.lowVolume = 0.1;
+	
 };
 
 
@@ -65,7 +61,6 @@ Sound.prototype.Play = function (){
 	if( this.storeVolume !== 0 ){
 		//if this sound is still playing, 
 		//we clone this sound and play it
-		console.log('playeing' );
 		if(this.sound.currentTime > 0 && this.cloneNodes < 2)
 		{
 			this.cloneNodes++;

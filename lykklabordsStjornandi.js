@@ -9,26 +9,6 @@ var keys = [];
 // farið inn í stak 65) og það sett sem true
 function handleKeydown(evt) {
     keys[evt.keyCode] = true;
-
-
-       /*  switch( e.keyCode ) {
-            case 38:    // upp ör
-                ppos[0] += step*lookdir[0];
-                ppos[2] += step*lookdir[2];
-                break;
-            case 40:    // niður ör
-                ppos[0] -= step*lookdir[0];
-                ppos[2] -= step*lookdir[2];
-                break;
-            case 37:    // vinstri ör
-                ppos[0] += step*lookdir[2];
-                ppos[2] -= step*lookdir[0];
-                break;
-            case 39:    // hægri ör
-                ppos[0] -= step*lookdir[2];
-                ppos[2] += step*lookdir[0];
-                break;
-         }*/
 }
 
 //sama og fyrir ofan nema sett í false aftur

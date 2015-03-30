@@ -33,10 +33,19 @@ uniform vec2 drawMode;
 
 void
 main()
-{
+{	
+    
+
     if( drawMode[0] == 1.0 ){
         vec4 color1  = texture2D( texture1, fTexCoord ); 
-        gl_FragColor = color1;
+        if( color1.r + color1.g + color1.b < 0.1 ){
+
+       	 discard;
+        }
+    	else{
+
+        	gl_FragColor = color1;
+    	}
     } else {
         gl_FragColor = fColor;
     }
