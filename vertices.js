@@ -8,16 +8,25 @@ var vertices = {
 	groundIndex:    null,
 	pointGridIndex: null,	
 	groundSurfaceIndex: null,	
+	startScreenIndex: null,
+	startTextIndex: null,
 
 	build: function( ){
     	this.reset();
-    	this.groundSurfaceIndex = this.makeGroundSurface( );
-    	this.worldIndex = this.makeWorld( );
-		this.gridIndex = this.makeGrid( );
-    	this.cubeIndex = this.makeCube(  );
-    	this.groundIndex = this.makeGround( );
-    	this.pointGridIndex = this.makePointGrid( );
-    	this.pushVertices( );
+    	if( !startGame ){
+    		this.startScreenIndex = this.makeStartScreen( );
+    		this.startTextIndex = this.makeStartText( );
+    	}
+    	else {
+    		console.log( "hallo" );
+	    	this.groundSurfaceIndex = this.makeGroundSurface( );
+	    	this.worldIndex = this.makeWorld( );
+			this.gridIndex = this.makeGrid( );
+	    	this.cubeIndex = this.makeCube(  );
+	    	this.groundIndex = this.makeGround( );
+	    	this.pointGridIndex = this.makePointGrid( );
+    	}
+	    this.pushVertices( );
 	},
 
 	reset: function( ){
@@ -33,7 +42,76 @@ var vertices = {
 	        points_t = points.concat( this.shape.t_points );
 	        texCoords_t = texCoords.concat( this.shape.t_textur );
 	    }
+
+
 	    //texCoords = texCoords.concat( this.shape.t_textur); 
+	},
+
+	makeStartText: function(){
+		var storeText = [];
+		var r = 1.0;
+		var g = 1.0;
+		var b = 1.0;
+		var t = 1.0;
+		storeText.push( 
+			this.add( new Text(
+			{
+				r: r,
+				g: g,
+				b: b,
+				t: t,
+				text: 'press'
+
+			}), "startScreen")
+		);
+		storeText.push( 
+			this.add( new Text(
+			{
+				r: r,
+				g: g,
+				b: b,
+				t: t,
+				text: 'enter'
+
+			}), "startScreen")
+		);
+
+		storeText.push( 
+			this.add( new Text(
+			{
+				r: r,
+				g: g,
+				b: b,
+				t: t,
+				text: 'to'
+
+			}), "startScreen")
+		);
+
+		storeText.push( 
+			this.add( new Text(
+			{
+				r: r,
+				g: g,
+				b: b,
+				t: t,
+				text: 'start'
+
+			}), "startScreen")
+		);
+
+		return storeText;
+	},
+
+	makeStartScreen: function(){
+		return this.add( new Octahedron(
+		{
+			r: 0.0,
+			g: 0.0,
+			b: 1.0,
+			t: 1.0
+
+		}), "startScreen");
 	},
 
 	makeGrid: function( ){
@@ -140,6 +218,73 @@ var vertices = {
 	},
 
 
+	renderStartScreen: function( ctm, matrixLoc ){
+
+		var start = this.startScreenIndex.start;
+		var count = this.startScreenIndex.count;
+
+		ctm = mult( ctm, scale4( [3.1, 3.1, 3.1]));
+		ctm = mult( ctm, translate( [1.5, 0.0, 0.0]));
+
+
+		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
+		gl.drawArrays(gl.LINES, start, count);
+	},
+
+
+	renderStartText: function( ctm, matrixLoc ){
+		var ctmStack = [];
+
+		var start1 = this.startTextIndex[0].start;
+		var count1 = this.startTextIndex[0].count;
+		
+		var start2 = this.startTextIndex[1].start;
+		var count2 = this.startTextIndex[1].count;
+
+		var start3 = this.startTextIndex[2].start;
+		var count3 = this.startTextIndex[2].count;
+
+		var start4 = this.startTextIndex[3].start;
+		var count4 = this.startTextIndex[3].count;
+
+
+		ctm = mult( ctm, scale4( [1.3, 1.3, 1.3]));
+
+		var x = -0.3;
+		var y = 0.5;
+
+		//PRESS
+		ctmStack.push( ctm );
+			ctm = mult( ctm, translate([x, 1.0-y, 0.0]));
+			gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
+			gl.drawArrays(gl.LINES, start1, count1);
+		ctm = ctmStack.pop();
+
+		//ENTER
+		ctmStack.push( ctm );
+			ctm = mult( ctm, translate([x, 0.7-y,0.0]));
+			gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
+			gl.drawArrays(gl.LINES, start2, count2);
+		ctm = ctmStack.pop();
+
+
+		//TO
+		ctmStack.push( ctm );
+			ctm = mult( ctm, translate([x, 0.4-y,0.0]));
+			gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
+			gl.drawArrays(gl.LINES, start3, count3);
+		ctm = ctmStack.pop();
+
+		//START
+		ctmStack.push( ctm );
+			ctm = mult( ctm, translate([x, 0.1-y,0.0]));
+			gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
+			gl.drawArrays(gl.LINES, start4, count4);
+		ctm = ctmStack.pop();
+
+	},
+
+
 
 	renderGrid: function( ctm, matrixLoc){
 	
@@ -233,8 +378,6 @@ var vertices = {
 
 		ctm = mult( ctm, translate([0.0, -3.9, 0.0]));
 		ctm = mult( ctm, rotate(90, [1.0, 0.0, 0.0]));
-
-
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
 

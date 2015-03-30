@@ -74,6 +74,8 @@ var KEY_LEFT  = keyCode('H');
 var KEY_RIGHT = keyCode('K');
 var KEY_DOWN  = keyCode('J');
 
+var KEY_ENTER = 13;
+
 var space = 32;
 var left = 37;
 var up = 38; 

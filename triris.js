@@ -24,8 +24,7 @@ function geraKubb( drawArrayIndex ) {
                 size: 3,
                 location1: [3,0,3],
                 location2: [3,1,3],
-                location3: [3,2,3],
-                arrayIndex: drawArrayIndex
+                location3: [3,2,3]
             }));    
     }else{
         kubbar.push(new Kubbur({
@@ -33,8 +32,7 @@ function geraKubb( drawArrayIndex ) {
                 size: 3,
                 location1: [2,1,3],
                 location2: [3,1,3],
-                location3: [3,2,3],
-                arrayIndex: drawArrayIndex
+                location3: [3,2,3]
             }));
     }
 };
@@ -46,21 +44,20 @@ function updateSimulation(du) {
     document.getElementById("Level").innerHTML = level;
     var flow = false;
    
-    for(var i = 0; i<kubbar.length; i++){
-        var stateOfBlock = kubbar[i].update(du)
-        
-        if(stateOfBlock === 1){
-
-            checkForFumble(du);
-            var start = vertices.cubeIndex.start;
-            var count = vertices.cubeIndex.count;
-            geraKubb( [start,count] );
-
-        }else if(stateOfBlock === -1){
-           
-            kubbar.splice(i,1);
-            i--;
+    if( startGame ){   
+        for(var i = 0; i<kubbar.length; i++){
+            var stateOfBlock = kubbar[i].update(du)
             
+            if(stateOfBlock === 1){
+                checkForFumble(du);
+                geraKubb( );
+
+            }else if(stateOfBlock === -1){
+               
+                kubbar.splice(i,1);
+                i--;
+                
+            }
         }
     }
     if(  eatKey(G) ){ 
@@ -79,7 +76,14 @@ function updateSimulation(du) {
         initializeLineMode();
     }
 
-    if(  eatKey( KEY_UP ) ){ //UP
+    if( eatKey( KEY_ENTER ) ) {
+        startGame = true;
+        initializeTextureMode();
+    }
+
+
+
+   /* if(  eatKey( KEY_UP ) ){ //UP
         ppos[0] += step*lookdir[0];
         ppos[2] += step*lookdir[2];
     }
@@ -99,7 +103,7 @@ function updateSimulation(du) {
         look = !look;
        // mouselook = !mouselook;
         resetLook();
-     }
+     }*/
     //console.log(playField[0][3][3]);
 }
 
@@ -198,6 +202,9 @@ var texCoords_t;
 
 var drawMode;
 
+var startGame = false;
+var gameOver = false;
+
 var xAxis = 0;
 var yAxis = 1;
 var zAxis = 2;
@@ -211,6 +218,9 @@ var spinX = 0;
 var spinY = 0;
 var origX;
 var origY;
+
+var startGameSpinY = 0;
+var startGameSpinX = 0;
 
 var mouseX;
 var mouseY;
@@ -229,6 +239,9 @@ var stefna;
 var step;
 
 var look = true;
+
+
+var locColor;
 
 var program;
 var textures;
@@ -268,22 +281,47 @@ window.onload = function init()
     //console.log( playField );
     //debugger;
 
-    starter();
+   /* startScreen.build();
+
+    startScreen.render();
+
+    debugger;*/
+
+    //var canvas1  document.getElementById('gl-canvas');
+   // var ctx = canvas.getContext('2d');
+
+/*    ctx.fillStyle = "#333333";  // This determines the text colour, it can take a hex value or rgba value (e.g. rgba(255,0,0,0.5))
+    ctx.textAlign = "center";   // This determines the alignment of text, e.g. left, center, right
+    ctx.textBaseline = "middle";    // This determines the baseline of the text, e.g. top, middle, bottom
+    ctx.font = "12px monospace";
+
+    ctx.fillText("HTML5 Rocks!", canvas.width/2, canvas.height/2);
+*/
+
+
+
+   // starter( );
+
+   /* var shape = new Shape();
+    shape.insertShape( new Octahedron() );
+    while( !startGame ){
+
+    }*/
 
     //
     // CONFIGURE TEXTURE
     //
-    textures = texture.convertImagesToTexture( g_images );
+  //  textures = texture.convertImagesToTexture( g_images );
 
-    initializeTextureMode();
-    //initializeLineMode();
+    //initializeTextureMode();
+    initializeLineMode();
 
 
-    proLoc = gl.getUniformLocation( program, "projection" );
-    mvLoc = gl.getUniformLocation( program, "modelview" );
+   // proLoc = gl.getUniformLocation( program, "projection" );
+   // mvLoc = gl.getUniformLocation( program, "modelview" );
 
-    var drMode = gl.getUniformLocation( program, "drawMode" );
-    gl.uniform2fv( drMode, flatten(vec2(1.0, 0.0)) );
+    //  var drMode = gl.getUniformLocation( program, "drawModse" );
+    //gl.uniform2fv( drMode, flatten(vec2(0.0, 1.0)) );
     
     
 
@@ -309,6 +347,7 @@ window.onload = function init()
              if(movement) {
                 spinY = ( spinY + (e.offsetX - origX) ) % 360;
                 spinX = ( spinX + (origY - e.offsetY) ) % 360;
+                console.log( spinX );
                 origX = e.offsetX;
                 origY = e.offsetY;
             }   
@@ -342,9 +381,8 @@ window.onload = function init()
                 zDist -= 1.1;
             }
         });
-    var start = vertices.cubeIndex.start;
-    var count = vertices.cubeIndex.count;
-    geraKubb( [start, count] );
+
+    geraKubb(  );
 }
 
 
@@ -375,9 +413,6 @@ function resetLook(){
 function starter(){
     canvas = document.getElementById( "gl-canvas" );
     
-    viewHalfX = window.innerWidth / 2;
-    viewHalfY = window.innerHeight / 2;
-
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
@@ -412,6 +447,7 @@ function initializeTextureMode(){
     //
     vertices.build();
 
+    textures = texture.convertImagesToTexture( g_images );
 
     //
     // INITIALIZE BUFFERS
@@ -432,7 +468,7 @@ function initializeTextureMode(){
     gl.vertexAttribPointer( vTexCoord, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vTexCoord );
 
-    var drMode = gl.getUniformLocation( program, "drawMode" );
+    var drMode = gl.getUniformLocation( program, "draMode" );
     gl.uniform2fv( drMode, flatten(vec2(1.0, 0.0)) );
 
     initializeLocation();
@@ -452,18 +488,9 @@ function initializeLineMode(){
     //
     vertices.build();
 
-   
     //
     // INITIALIZE BUFFERS
     //
-    cBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(colors_l), gl.STATIC_DRAW );
-
-    var vColor = gl.getAttribLocation( program, "vColor" );
-    gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColor );
-
     kassi = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, kassi);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(points_l), gl.STATIC_DRAW);
@@ -472,10 +499,18 @@ function initializeLineMode(){
     gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    var locColor = gl.getUniformLocation( program, "fColor" );
+    cBuffer = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(colors_l), gl.STATIC_DRAW );
+
+    var vColor = gl.getAttribLocation( program, "vColor" );
+    gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vColor );
+
+    locColor = gl.getUniformLocation( program, "fColor" );
     gl.uniform4fv( locColor, flatten(colors_l) );
 
-    var drMode = gl.getUniformLocation( program, "drawMode" );
+    var drMode = gl.getUniformLocation( program, "draMode" );
     gl.uniform2fv( drMode, flatten(vec2(0.0, 1.0)) );
 
     initializeLocation();
@@ -505,6 +540,8 @@ function scale4( x, y, z )
 
 
 
+
+
 function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -513,48 +550,73 @@ function render()
     var proj = perspective( 50.0, 1.0, 0.2, 100.0 );
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
-    // staðsetja áhorfanda og meðhöndla músarhreyfingu
-    if(look){
-        var ctm = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
-    }else{
-        var ctm = lookAt( ppos, add(ppos, lookdir), vec3(0.0, 1.0, 0.0));
+
+    if( !startGame && !gameOver ){
+        startGameSpinY += 0.4;
+        startGameSpinX += 0.4;
+        var ctm1 = lookAt( vec3(0.0, 0.0, -5.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+
+        //RENDER STARTSCREEN TEXT
+        ctmStack.push( ctm1 );
+            vertices.renderStartText(ctm1, mvLoc);
+        ctm1 = ctmStack.pop();
+
+        ctm1 = mult( ctm1, rotate( parseFloat( startGameSpinX ), [1, 0, 0] ) );
+        ctm1 = mult( ctm1, rotate( parseFloat(startGameSpinY), [0, 1, 0] ) );
+        
+        ctm1 = mult( ctm1, scale4(0.3,0.3,0.3));
+        
+        //RENDER STARTSCREEN OBJECTS
+        ctmStack.push( ctm1 );
+            vertices.renderStartScreen(ctm1, mvLoc);
+        ctm1 = ctmStack.pop();
+
+    } else if (startGame && !gameOver){
+
+        // staðsetja áhorfanda og meðhöndla músarhreyfingu
+        if(look){
+            var ctm = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+        }else{
+            var ctm = lookAt( ppos, add(ppos, lookdir), vec3(0.0, 1.0, 0.0));
+        }
+        ctm = mult( ctm, rotate( parseFloat(spinX), [1, 0, 0] ) );
+        ctm = mult( ctm, rotate( parseFloat(spinY), [0, 1, 0] ) );
+        ctm = mult( ctm, scale4(0.3,0.3,0.3));
+
+        //RENDER WORLD
+        ctmStack.push( ctm );
+            vertices.renderWorld(ctm, mvLoc);
+        ctm = ctmStack.pop();
+
+        ctmStack.push( ctm );
+            vertices.renderGroundSurface(ctm, mvLoc);
+        ctm = ctmStack.pop();
+        
+        
+        //translate tetris playground
+        ctm = mult( ctm, translate([0.0, 1.0, 0.0]));
+
+        //RENDER GRID
+        ctmStack.push( ctm );
+            vertices.renderGrid(ctm, mvLoc);
+        ctm = ctmStack.pop();
+        
+        //RENDER EARTH
+        ctmStack.push( ctm );
+            vertices.renderGround(ctm, mvLoc);
+        ctm = ctmStack.pop();
+
+        //RENDER GRIDPOINTS
+        ctmStack.push( ctm );
+            vertices.renderGrid(ctm, mvLoc);
+        ctm = ctmStack.pop();
+
+        //RENDER CUBES
+        for(var i = 0; i<kubbar.length; i++){
+            kubbar[i].render(ctm, mvLoc);
+        }
     }
-    ctm = mult( ctm, rotate( parseFloat(spinX), [1, 0, 0] ) );
-    ctm = mult( ctm, rotate( parseFloat(spinY), [0, 1, 0] ) );
-    ctm = mult( ctm, scale4(0.3,0.3,0.3));
-    
-
-
-    //RENDER WORLD
-    ctmStack.push( ctm );
-        vertices.renderWorld(ctm, mvLoc);
-    ctm = ctmStack.pop();
-
-    ctmStack.push( ctm );
-        vertices.renderGroundSurface(ctm, mvLoc);
-    ctm = ctmStack.pop();
-    
-    
-    //translate tetris playground
-    ctm = mult( ctm, translate([0.0, 1.0, 0.0]));
-
-    //RENDER GRID
-    ctmStack.push( ctm );
-        vertices.renderGrid(ctm, mvLoc);
-    ctm = ctmStack.pop();
-    
-    //RENDER EARTH
-    ctmStack.push( ctm );
-        vertices.renderGround(ctm, mvLoc);
-    ctm = ctmStack.pop();
-
-    //RENDER GRIDPOINTS
-    ctmStack.push( ctm );
-        vertices.renderGrid(ctm, mvLoc);
-    ctm = ctmStack.pop();
-
-    //RENDER CUBES
-    for(var i = 0; i<kubbar.length; i++){
-        kubbar[i].render(ctm, mvLoc);
+    else if ( gameOver ){
+        console.log( "game over ...")
     }
 }

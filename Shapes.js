@@ -60,7 +60,8 @@ Shapes.prototype.reset = function(){
 
 Shapes.prototype.insertShape = function( shape, enviroment ){
 	this.shape.push( shape );
-	
+
+
 	if( enviroment === "grid" ){
 		this.t_points = this.t_points.concat( shape.l_points );
 		this.t_textur = this.t_textur.concat( shape.l_colors );	
@@ -131,14 +132,13 @@ Shapes.prototype.insertShape = function( shape, enviroment ){
 
 	this.numShapes++;
 
-	console.log("l_temp: " + temp);
+	//console.log("l_temp: " + temp);
 	//console.log( this.t_points );
 	//console.log( this.l_points );
 
-	if( enviroment === "world"){
-		
-	}
-
+	/*if( enviroment === "startScreen" ){
+		return this.l_subinterval[this.numShapes-1];
+	}*/
 
 	if( drawMode === gl.LINES ){
 		return this.l_subinterval[this.numShapes-1];
