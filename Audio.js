@@ -107,6 +107,10 @@ Sound.prototype.reset = function (){
 	return time;
 };
 
+Sound.prototype.Pause = function (){
+	this.sound.pause();
+};
+
 
 Sound.prototype.playOnVolume = function ( volume ){
 	var time = this.reset();
@@ -211,7 +215,11 @@ function playThemeSong() {
 var requiredSounds = {
 	//GAMEPLAY SOUND
 	fumble	: "sounds/fumble.ogg",
-	levelUp:"sounds/levelUp.ogg"
+	levelUp:"sounds/levelUp.ogg",
+	theme: "sounds/Theme.ogg",
+	shift: "sounds/shift.ogg",
+	fall: "sounds/fall.ogg",
+	thump: "sounds/thump.ogg"
 };
 
 
@@ -232,6 +240,6 @@ function audioPreloadDone() {
 	for(var sound in g_sounds) {
 		g_audio[sound] = new Sound(g_sounds[sound], sound);
 	}
-	//playThemeSong();
+	g_audio.theme.playSound();
 }
 

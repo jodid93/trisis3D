@@ -4,7 +4,7 @@ function Kubbur(descr) {
         this[property] = descr[property];
     }
 }
-
+var falling = 0;
 // Initial, inheritable, default values
 Kubbur.prototype.size;
 Kubbur.prototype.location1;
@@ -38,7 +38,9 @@ Kubbur.prototype.update = function (du) {
 
     //check for rotations
     if(keys[A]&& this.active){
-
+        if(soundFX){
+            g_audio.shift.Play();
+        }
 
         if(this.type === 1){
 
@@ -241,6 +243,9 @@ Kubbur.prototype.update = function (du) {
 
     if(keys[S]&& this.active){
 
+        if(soundFX){
+            g_audio.shift.Play();
+        }
 
         if(this.type === 1){
 
@@ -433,6 +438,9 @@ Kubbur.prototype.update = function (du) {
 
     if(keys[D]&& this.active){
 
+        if(soundFX){
+            g_audio.shift.Play();
+        }
 
         if(this.type === 1){
 
@@ -694,8 +702,14 @@ Kubbur.prototype.update = function (du) {
     
     if(keys[space]){
         var time = 1;
+        falling ++;
+        if(soundFX&&falling===1){
+            g_audio.fall.Play();
+            
+        }
     }else{
         time = (100-(10*level));
+        falling = 0;
     }
     if(this.time > time && !this.landed){
         this.time = 0;
@@ -738,6 +752,9 @@ Kubbur.prototype.update = function (du) {
 Kubbur.prototype.checkBottom = function(){
     
     if((this.location1[1]+1 > 21 || playField[this.location1[0]][this.location1[1]+1][this.location1[2]] == true)&&this.block1Alive){
+        if(soundFX&&this.signal === 0){
+            g_audio.thump.Play();
+        }
         this.signal++;
         this.landed = true;
         this.active = false;
@@ -748,6 +765,9 @@ Kubbur.prototype.checkBottom = function(){
         //console.log('herna 1')
     }
     else if((this.location2[1]+1 > 21 || playField[this.location2[0]][this.location2[1]+1][this.location2[2]] == true)&&this.block2Alive){
+        if(soundFX&&this.signal === 0){
+            g_audio.thump.Play();
+        }
         this.signal++;
         this.landed = true;
         this.active = false;
@@ -758,6 +778,9 @@ Kubbur.prototype.checkBottom = function(){
         //console.log('herna 2')
     }
     else if((this.location3[1]+1 > 21 || playField[this.location3[0]][this.location3[1]+1][this.location3[2]] == true)&&this.block3Alive){
+        if(soundFX&&this.signal === 0){
+            g_audio.thump.Play();
+        }
         this.signal++;
         this.landed = true;
         this.active = false;

@@ -10,7 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 //      ENGINE
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+var muted = false;
+var soundFX = true;
 
 var main = {
     
@@ -56,21 +57,37 @@ main._iterCore = function (dt) {
     if(eatKey(P)){
         pause = !pause;
     }
-   /* if (hasWon ) {
+
+    if(eatKey(M)){
+        muted = !muted;
+        if(!muted){
+            g_audio.theme.playSound();
+        }
+    }
+
+    if(muted){
+        g_audio.theme.Pause();
+    }
+
+    if(eatKey(FX)){
+        soundFX = !soundFX;
+    }
+    if (hasWon ) {
 
         //þá er keyrður tómur skjár
-        blankScreen();
+        render();
 
         //ef það er ýtt á R þá endurstillist leikurinn
         if(keys[Restart]){
+            score = 0;
+            level = 1;
+            restart = true;
+            kubbar = [];
+            resetLook();
+            resetPlayfield();
             hasWon = false;
-            loa.stig = 0;
-            loa.dir = 1;
-            loa.cx = 256;
-            loa.cy = 256;
         }
-        return;
-    }*/
+    }
     
     if(!pause && !hasWon){
 
@@ -147,6 +164,7 @@ main._requestNextIteration = function () {
 main.init = function () {
     
     //bið um næsta glugga
+
     this._requestNextIteration();
 };
 

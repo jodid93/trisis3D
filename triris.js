@@ -14,6 +14,7 @@ var playField;
 var kubbar = [];
 var score = 0;
 var level = 1;
+var restart = false;
 
 //function til að initialize-a nýjan orm
 function geraKubb( drawArrayIndex ) {
@@ -46,15 +47,24 @@ function updateSimulation(du) {
     document.getElementById("Level").innerHTML = level;
     var flow = false;
    
+   if(restart){
+    var start = vertices.cubeIndex.start;
+    var count = vertices.cubeIndex.count;
+    geraKubb( [start,count] );
+    restart = false;
+   }
+
     for(var i = 0; i<kubbar.length; i++){
         var stateOfBlock = kubbar[i].update(du)
         
         if(stateOfBlock === 1){
 
+            console.log('Nyr kubbur')
             checkForFumble(du);
             var start = vertices.cubeIndex.start;
             var count = vertices.cubeIndex.count;
             geraKubb( [start,count] );
+            
 
         }else if(stateOfBlock === -1){
            
@@ -130,10 +140,13 @@ function checkForFumble(du){
         score += 10;
         if((score%50) === 0){
             level++;
-            g_audio.levelUp.Play();
+            if(soundFX){
+                g_audio.levelUp.Play();
+            }
         }else{
-
-            g_audio.fumble.Play();
+            if(soundFX){
+                g_audio.fumble.Play();
+            }
         }
     }else if(currentScore === 20){
         var fumbl = true;
@@ -142,13 +155,17 @@ function checkForFumble(du){
             score += 10;
             if((score%50) === 0){
                 level++;
-                g_audio.levelUp.Play();
+                if(soundFX){
+                    g_audio.levelUp.Play();
+                }
                 fumbl = false;
             }
         }
         if(fumbl){ 
+            if(soundFX){
 
-            g_audio.fumble.Play();
+                g_audio.fumble.Play();
+            }
         }
     }else if(currentScore === 30){
 
@@ -158,13 +175,16 @@ function checkForFumble(du){
             score += 10;
             if((score%50) === 0){
                 level++;
-                g_audio.levelUp.Play();
+                if(soundFX){
+                    g_audio.levelUp.Play();
+                }
                 fumbl = false;
             }
         }
         if(fumbl){ 
-
-            g_audio.fumble.Play();
+            if(soundFX){
+                g_audio.fumble.Play();
+            }
         }
     }
     //console.log(playField[0][3][3]);
@@ -417,6 +437,22 @@ function resetLook(){
     lookdir = vec3(0.0, 0.0, -1.0); // Núverandi áhorfsvigur leikmanns
     stefna = 90.0               // Upphafleg stefna leikmanns
     step = 0.05;                // Skrefstærð hreyfingar
+}
+
+function resetPlayfield(){
+    playField = new Array();
+
+    for(var i = 0; i<6; i++){
+        playField[i] = new Array();
+        for(var u = 0; u<22; u++){
+            playField[i][u] = new Array();
+            for(var o = 0; o<6; o++){
+                playField[i][u][o] = new Array();
+                playField[i][u][o] = false;
+
+            }
+        }
+    }
 }
 
 

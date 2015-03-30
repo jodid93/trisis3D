@@ -73,6 +73,9 @@ var KEY_UP    = keyCode('U');
 var KEY_LEFT  = keyCode('H');
 var KEY_RIGHT = keyCode('K');
 var KEY_DOWN  = keyCode('J');
+var Mute = keyCode('M');
+var FX = keyCode('F');
+var Restart = keyCode('R');
 
 var space = 32;
 var left = 37;
