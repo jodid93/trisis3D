@@ -342,7 +342,7 @@ var vertices = {
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
     	
     	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
-    	console.log(start, count)
+  
 		gl.drawArrays(drawMode, start, count);
 	},
 
