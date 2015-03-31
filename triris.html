@@ -1,204 +1,245 @@
 <html>
 
 <head>
-<meta charset="utf-8">
-<title>HANGING MOBILE</title>
-</head>
+    <meta charset="utf-8">
+    <title>HANGING MOBILE</title>
+        <style>
+            body, html { 
+                background-color: gainsboro;/*#606060;*/
+                width: 100%;
+                height: 100%;
+                border: 0px;
+                padding: 0px;
+                margin: 0px;
+              }
+            #canvas {
+                border: "1px solid black";
+                width: 100%;
+                height: 100%;
+              }
 
-<style>
-body{
-    background-color: gainsboro;/*#606060;*/
-}
+            #header {
+                color:#800000;
+                text-align:center;
+                position:absolute;
+                top:0%;
+                left:30%;
+                width: 512px;
+                height: 512px
+            }
+            #nav {
+                font-family: Impact, Charcoal, sans-serif;
+                line-height:30px;
+                background-color:lightgray;
+                opacity:0.6;
+                position:absolute;
+                top: 15%;
+                width:10%;
+                padding:5px; 
+            }
 
-#header {
-    color:#800000;
-    text-align:center;
-    position:absolute;
-    top:0%;
-    left:30%;
-    width: 512px;
-    height: 512px
-}
-#nav {
-    line-height:30px;
-    background-color:lightgray;
-    position:absolute;
-    top: 15%;
-    width:25%;
-    padding:5px; 
-}
+            #nav2 {
+                font-family: Impact, Charcoal, sans-serif;
+                line-height:30px;
+                background-color:lightgray;
+                opacity:0.6;
+                top: 35%;
+                position:absolute;
+                width:10%;
+                padding:5px; 
+            }
 
-#game {
-    border-style: ridge;
-    border-color: black;
-    position:absolute;
-    top:10%;
-    left:30%;
-    width: 512px;
-    height: 512px
-}
-#controls {
-    position:absolute;
-    top: 5%;
-    width:25%;
-    padding:5px; 
-}
-#gameInfo {
-    position:absolute;
-    top: 50%;
-    left: 80%;
-    width:25%;
-    padding:5px; 
-}
-</style>
-
-<script id="vertex-shader" type="x-shader/x-vertex">
-
-attribute  vec4 vPosition;
-attribute  vec4 vColor;
-attribute  vec2 vTexCoord;
-
-varying vec4 fColor;
-varying vec2 fTexCoord;
-
-uniform mat4 projection;
-uniform mat4 modelview;
-
-void main() 
-{
-    fTexCoord = vTexCoord;
-    fColor = vColor;
-    gl_PointSize = 1.0;
-    gl_Position = projection * modelview * vPosition;
-} 
-</script>
-
-<script id="fragment-shader" type="x-shader/x-fragment">
-
-precision mediump float;
-
-varying vec4 fColor;
-
-varying vec2 fTexCoord;
-
-uniform sampler2D texture1;
-uniform vec2 draMode;
-
-void main()
-{	
-    if( draMode[0] == 1.0 ){
-        vec4 color1  = texture2D( texture1, fTexCoord ); 
-        if( color1.r + color1.g + color1.b < 0.1 ){
-
-       	 discard;
-        }
-    	else{
-
-        	gl_FragColor = color1;
-    	}
-    } else {
-        gl_FragColor = fColor;
-    }
-}
-</script>
+            #nav3 {
+                font-family: Impact, Charcoal, sans-serif;
+                line-height:30px;
+                background-color:lightgray;
+                opacity:0.6;
+                top: 65%;
+                position:absolute;
+                width:10%;
+                padding:5px; 
+            }
 
 
+            #game {
+                border-style: ridge;
+                border-color: black;
+                position:absolute;
+                top:10%;
+                left:30%;
+                width: 512px;
+                height: 512px;
+            }
+            #controls {
+                position:absolute;
+                top: 5%;
+                width:25%;
+                padding:5px; 
+            }
+            #gameInfo {
+                position:absolute;
+                top: 50%;
+                left: 80%;
+                width:25%;
+                padding:5px; 
+            }
+        </style>
 
-<script type="text/javascript" src="https://notendur.hi.is/~jot17/Grafik/webgl-utils.js"></script>
-<script type="text/javascript" src="https://notendur.hi.is/~jot17/Grafik/InitShaders.js"></script>
-<script type="text/javascript" src="https://notendur.hi.is/~jot17/Grafik/MV.js"></script>
+        <script id="vertex-shader" type="x-shader/x-vertex">
+            attribute  vec4 vPosition;
+            attribute  vec4 vColor;
+            attribute  vec2 vTexCoord;
 
-<script type="text/javascript" src="lykklabordsStjornandi.js"></script>
+            varying vec4 fColor;
+            varying vec2 fTexCoord;
 
-<script type="text/javascript" src="imagesPreload.js"></script>
-<script type="text/javascript" src="soundsPreload.js"></script>
-<script type="text/javascript" src="Audio.js"></script>
-<script type="text/javascript" src="Hexahedron.js"></script>
-<script type="text/javascript" src="Octahedron.js"></script>
-<script type="text/javascript" src="Text.js"></script>
-<script type="text/javascript" src="Square.js"></script>
-<script type="text/javascript" src="pinski.js"></script>
-<script type="text/javascript" src="Shapes.js"></script>
-<script type="text/javascript" src="startScreen.js"></script>
-<script type="text/javascript" src="vertices.js"></script>
-<script type="text/javascript" src="texture.js"></script>
-<script type="text/javascript" src="triris.js"></script>
+            uniform mat4 projection;
+            uniform mat4 modelview;
+
+            void main() 
+            {
+                fTexCoord = vTexCoord;
+                fColor = vColor;
+                gl_PointSize = 1.0;
+                gl_Position = projection * modelview * vPosition;
+            } 
+        </script>
+
+        <script id="fragment-shader" type="x-shader/x-fragment">
+            precision mediump float;
+
+            varying vec4 fColor;
+
+            varying vec2 fTexCoord;
+
+            uniform sampler2D texture1;
+            uniform vec2 draMode;
+
+            void main()
+            {	
+                if( draMode[0] == 1.0 ){
+                    vec4 color1  = texture2D( texture1, fTexCoord ); 
+                    if( color1.r + color1.g + color1.b < 0.2 ){
+
+                   	 discard;
+                    }
+                	else{
+
+                    	gl_FragColor = color1;
+                	}
+                } else {
+                    gl_FragColor = fColor;
+                }
+            }
+        </script>
 
 
-<script type="text/javascript" src="engine.js"></script>
 
-<script type="text/javascript" src="Kubbur.js"></script>
+        <script type="text/javascript" src="https://notendur.hi.is/~jot17/Grafik/webgl-utils.js"></script>
+        <script type="text/javascript" src="https://notendur.hi.is/~jot17/Grafik/InitShaders.js"></script>
+        <script type="text/javascript" src="https://notendur.hi.is/~jot17/Grafik/MV.js"></script>
+
+        <script type="text/javascript" src="lykklabordsStjornandi.js"></script>
+
+        <script type="text/javascript" src="imagesPreload.js"></script>
+        <script type="text/javascript" src="soundsPreload.js"></script>
+        <script type="text/javascript" src="Audio.js"></script>
+        <script type="text/javascript" src="Hexahedron.js"></script>
+        <script type="text/javascript" src="Octahedron.js"></script>
+        <script type="text/javascript" src="Text.js"></script>
+        <script type="text/javascript" src="Square.js"></script>
+        <script type="text/javascript" src="pinski.js"></script>
+        <script type="text/javascript" src="Shapes.js"></script>
+        <script type="text/javascript" src="startScreen.js"></script>
+        <script type="text/javascript" src="vertices.js"></script>
+        <script type="text/javascript" src="texture.js"></script>
+        <script type="text/javascript" src="triris.js"></script>
+
+
+        <script type="text/javascript" src="engine.js"></script>
+
+        <script type="text/javascript" src="Kubbur.js"></script>
 </head>   
-
-
 
 
 <body>
 
-<br/>
+    <canvas id="canvas"  width="512" height="512">
+    Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
 
-<div id="header">
-    <h1>
-        TRISIS 3D
-    </h1>
-</div>
-<div id="controls">
-    <h2>
-        Stjórnun
-    </h2>
-</div>
-<div id="nav">
-    <table style="width:100%">
-      <tr>
-        <td>Upp örvatakki</td>
-        <td>Snúningshraða til hægri eykst</td>
-      </tr>
-      <tr>
-        <td>Niður örvatakki</td>
-        <td>Snúningshraða til vinstri eykst</td>
-      </tr>
-       <tr>
-        <td>Vinstri örvatakki</td>
-        <td>Planka lengd minnkar</td>
-      </tr>
-      <tr>
-        <td>Hægri örvatakki</td>
-        <td>Planka lengd eykst</td>
-      </tr>
-      <tr>
-        <td>Bilstöng</td>
-        <td>Formin sveiflast</td>
-      </tr>
+    <div id="nav">
+        <table style="width:100%">
+          <tr>
+            <td>Takkar</td>
+            <td>Snúningur</td>
+          </tr>
+          <tr>
+            <td>A</td>
+            <td>x-ás</td>
+          </tr>
+          <tr>
+            <td>S</td>
+            <td>y-ás</td>
+          </tr>
+          <tr>
+            <td>D</td>
+            <td>z-ás</td>
+          </tr>
+        </table>
+    </div>
 
-      </tr>
-      <tr>
-        <td>Skruna  aftur á bak</td>
-        <td>Áhorfandi færist fjær miðju</td>
-      </tr>
-      <tr>
-        <td>Skruna áfram</td>
-        <td>Áhorfandi færist að miðju</td>
-      </tr>
-    </table>
-</div>
+    <div id="nav2">
+        <table style="width:100%">
+          <tr>
+            <td>Takkar</td>
+            <td>Aðgerð</td>
+          </tr>
+          <tr>
+            <td>T</td>
+            <td>Texture áferð</td>
+          </tr>
+           <tr>
+            <td>L</td>
+            <td>Line áferð</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Grid hverfur</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Botn hverfur</td>
+          </tr>
+          <tr>
+            <td>M</td>
+            <td>Mute</td>
+          </tr>
+          <tr>
+            <td>SPACE</td>
+            <td>Hraði kubba eykst</td>
+          </tr>
+        </table>
+    </div>
 
-<dev id="game">
-<canvas id="gl-canvas" width="512" height="512" style="border: 1px solid black;">
-Oops ... your browser doesn't support the HTML5 canvas element
-</canvas>
-</dev>
+     <div id="nav3">
+        <table style="width:100%">
+          <tr>
+            <td>Takkar</td>
+            <td>Aðgerð</td>
+          </tr>
+          <tr>
+            <td>P</td>
+            <td>Pása leikinn</td>
+          </tr>
+           <tr>
+            <td>R</td>
+            <td>Byrja uppá nýtt</td>
+          </tr>
+        </table>
+    </div>
 
-<dev id="gameInfo">
-    <section align ="left">
-    	<h1>score: 
-    		<a id="Score"> </a>
-    	</h1>
-    	<h1>Level: 
-    		<a id="Level"> </a>
-    	</h1>
-    </section>
-</dev>
-
-
+    </dev>
 </body>
+
 </html>
