@@ -63,6 +63,8 @@ var Mute = keyCode('M');
 var FX = keyCode('F');
 var Restart = keyCode('R');
 
+var KEY_ENTER = 13;
+
 var space = 32;
 var left = 37;
 var up = 38; 

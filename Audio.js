@@ -122,6 +122,10 @@ Sound.prototype.playAt = function ( time, volume ){
 	this.sound.playSound();
 };
 
+Sound.prototype.render = function(){
+	this.sound.play();
+};
+
 
 //==========================
 //GLOBAL FUNCITONS FOR AUDIO
@@ -174,7 +178,8 @@ function muteTrigger( bool ){
 
 //Plays theme sound in wich game sate is on
 function playThemeSong() {
-	var vol = g_audio.themeGame.lowVolume;
+	//var vol = g_audio.themeGame.lowVolume;
+	//g_audio.theme.play();
 	/*if( !g_audio.themeGame.mute &&  ){
 		if( startScreen.isVisible() && !g_gameOver && !g_gameWon)
 		{
@@ -235,6 +240,6 @@ function audioPreloadDone() {
 	for(var sound in g_sounds) {
 		g_audio[sound] = new Sound(g_sounds[sound], sound);
 	}
-	g_audio.theme.playSound();
+	//g_audio.theme.playSound();
 }
 
