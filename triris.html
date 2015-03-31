@@ -144,7 +144,7 @@
         void main()
         {   
 
-            
+    
 
             // Normalize the input lighting vectors
             vec3 fN = normalize(N);
@@ -169,13 +169,13 @@
 
             vec4 fColor = ambient + diffuse + specular;
             fColor.a = 1.0;
-            vec4 color = fColor * texture2D( texture1, fTexCoord );
+            vec4 color = vec4( fColor * texture2D( texture1, fTexCoord ) );
             if( draMode[0] == 1.0 ){
-                if( color1.r + color1.g + color1.b < 0.1 ){
+                if( color.r + color.g + color.b < 0.1 ){
                     discard;
                 }
             }
-            gl_FragColor = color
+            gl_FragColor = color;
                 
 
         }

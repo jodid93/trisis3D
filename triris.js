@@ -301,7 +301,7 @@ var texCoords_t;
 
 var drawMode;
 
-var startGame = false;
+var startGame = true;
 var gameOver = false;
 
 var xAxis = 0;
@@ -410,8 +410,8 @@ window.onload = function init()
     //
   //  textures = texture.convertImagesToTexture( g_images );
 
-    //initializeTextureMode();
-    initializeLineMode();
+    initializeTextureMode();
+    //initializeLineMode();
 
     textures = texture.convertImagesToTexture( g_images );
 
@@ -700,13 +700,13 @@ function initializeLineMode(){
     gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    cBuffer = gl.createBuffer();
+   /* cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors_l), gl.STATIC_DRAW );
 
     var vColor = gl.getAttribLocation( program, "vColor" );
     gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColor );
+    gl.enableVertexAttribArray( vColor );*/
 
     locColor = gl.getUniformLocation( program, "fColor" );
     gl.uniform4fv( locColor, flatten(colors_l) );
@@ -750,6 +750,7 @@ function render()
     var proj = perspective( 50.0, aspect, 0.2, 100.0 );
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
+
 
 
     if( !startGame && !gameOver ){
