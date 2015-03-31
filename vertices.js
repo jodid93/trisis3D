@@ -315,12 +315,12 @@ var vertices = {
 
 		//draw square ground for the
 		//trisis cubes landing place
-		if( GRID_TWO ){
+		/*if( GRID_TWO ){
 			gl.drawArrays(gl.LINES, start1,    2);
 			gl.drawArrays(gl.LINES, start1+8,  2);
 			gl.drawArrays(gl.LINES, start1+20, 2);
 			gl.drawArrays(gl.LINES, start1+22, 2);
-		}
+		}*/
 
 		//draw dots in every possiable
 		//cube corner possition in the grid
@@ -352,7 +352,7 @@ var vertices = {
 
         ctm = mult( ctm, rotate( -rotationY-180, [ 0, 1, 0]));
         ctm = mult( ctm, scale4( 1.2, 1.0, 1.0));
-        ctm = mult( ctm, translate([0.0, 1.0, 2.2]));
+        ctm = mult( ctm, translate([0.0, 1.0, 5.2]));
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
     	
@@ -378,11 +378,11 @@ var vertices = {
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
     
 		//Framan
-    	gl.bindTexture(gl.TEXTURE_2D, textures[6]);
+    	gl.bindTexture(gl.TEXTURE_2D, textures[7]);
 		gl.drawArrays(drawMode, start1, count2);
 		
 		//vinstri
-    	gl.bindTexture(gl.TEXTURE_2D, textures[6]);
+    	gl.bindTexture(gl.TEXTURE_2D, textures[8]);
 		gl.drawArrays(drawMode, start2, count2);
 		
 		// Teikna ekki bottninn

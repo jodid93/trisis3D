@@ -39,8 +39,8 @@ function geraKubb( drawArrayIndex ) {
 function updateSimulation(du) {
 
     //write out the score and level onto the web page
-    document.getElementById("Score").innerHTML = score;
-    document.getElementById("Level").innerHTML = level;
+    //document.getElementById("Score").innerHTML = score;
+    //document.getElementById("Level").innerHTML = level;
    
 
    //initialize a new block if the game is restarted
@@ -544,14 +544,60 @@ function resetPlayfield(){
     }
 }
 
+
+var aspect = 1.0;   
+
+ function resizeCanvas() {
+   /* only change the size of the canvas if the size it's being displayed
+    has changed.*/
+   var width = canvas.clientWidth;
+   var height = canvas.clientHeight;
+
+   aspect = (width/height);
+
+   if (canvas.width != width ||
+       canvas.height != height) {
+     /*Change the size of the canvas to match the size it's being displayed*/
+     canvas.width = width;
+     canvas.height = height;
+   }
+}
+
+
+
+function resize(gl) {
+  // Get the canvas from the WebGL context
+  var canvas = gl.canvas;
+ 
+  // Lookup the size the browser is displaying the canvas.
+  var displayWidth  = canvas.clientWidth;
+  var displayHeight = canvas.clientHeight;
+ 
+
+  // Check if the canvas is not the same size.
+  if (canvas.width  != displayWidth ||
+      canvas.height != displayHeight) {
+ 
+    // Make the canvas the same size
+    canvas.width  = displayWidth;
+    canvas.height = displayHeight;
+ 
+    // Set the viewport to match
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+}
+
 //initialize our shaders
 function starter(){
-    canvas = document.getElementById( "gl-canvas" );
+    canvas = document.getElementById( "canvas" );
     
+
     gl = WebGLUtils.setupWebGL( canvas );
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
-    gl.viewport( 0, 0, canvas.width, canvas.height );
+    resizeCanvas();
+
+    gl.viewport( 0, 0, gl.canvas.width, gl.canvas.height );
     gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
     
     gl.enable(gl.DEPTH_TEST);
@@ -652,13 +698,13 @@ function initializeLineMode(){
     gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
 
-    cBuffer = gl.createBuffer();
+   /* cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors_l), gl.STATIC_DRAW );
 
     var vColor = gl.getAttribLocation( program, "vColor" );
     gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColor );
+    gl.enableVertexAttribArray( vColor );*/
 
     locColor = gl.getUniformLocation( program, "fColor" );
     gl.uniform4fv( locColor, flatten(colors_l) );
@@ -697,11 +743,12 @@ function render()
 {   
     
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    
+
     var ctmStack = [];
-    var proj = perspective( 50.0, 1.0, 0.2, 100.0 );
+    var proj = perspective( 50.0, aspect, 0.2, 100.0 );
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
     
+
 
 
     if( !startGame && !gameOver ){
@@ -729,7 +776,7 @@ function render()
 
         // staðsetja áhorfanda og meðhöndla músarhreyfingu
         if(look){
-            var ctm = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );
+            var ctm = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );    
         }else{
             var ctm = lookAt( ppos, add(ppos, lookdir), vec3(0.0, 1.0, 0.0));
         }
@@ -755,10 +802,12 @@ function render()
             vertices.renderGrid(ctm, mvLoc);
         ctm = ctmStack.pop();
         
-        //RENDER EARTH
-        ctmStack.push( ctm );
-            vertices.renderGround(ctm, mvLoc);
-        ctm = ctmStack.pop();
+        if( !GRID_TWO ){
+            //RENDER EARTH
+            ctmStack.push( ctm );
+                vertices.renderGround(ctm, mvLoc);
+            ctm = ctmStack.pop();
+        }
 
         //RENDER GRIDPOINTS
         ctmStack.push( ctm );
@@ -776,7 +825,7 @@ function render()
 
     if(hasWon){
         ctmStack.push(ctm);
-            vertices.renderPlank(ctm, mvLoc, spinY )
+            vertices.renderPlank(ctm, mvLoc, spinY );
         ctm = ctmStack.pop();
     }
 
