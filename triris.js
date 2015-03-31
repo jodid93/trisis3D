@@ -301,7 +301,7 @@ var texCoords_t;
 
 var drawMode;
 
-var startGame = false;
+var startGame = true;
 var gameOver = false;
 
 var xAxis = 0;
@@ -410,8 +410,8 @@ window.onload = function init()
     //
   //  textures = texture.convertImagesToTexture( g_images );
 
-    //initializeTextureMode();
-    initializeLineMode();
+    initializeTextureMode();
+    //initializeLineMode();
 
     textures = texture.convertImagesToTexture( g_images );
 
@@ -602,8 +602,6 @@ function initializeTextureMode(){
     gl.enableVertexAttribArray( vTexCoord );
 
 
-    
-
     var vNormal = gl.getAttribLocation( program, "vNormal" );
     gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vNormal);
@@ -638,9 +636,9 @@ function initializeLineMode(){
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors_l), gl.STATIC_DRAW );
 
-    var vColor = gl.getAttribLocation( program, "vColor" );
+    /*var vColor = gl.getAttribLocation( program, "vColor" );
     gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vColor );
+    gl.enableVertexAttribArray( vColor );*/
 
     var vNormal = gl.getAttribLocation( program, "vNormal" );
     gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
