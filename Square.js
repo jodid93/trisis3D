@@ -120,7 +120,7 @@ Square.prototype.quad = function(a, b, c, d)
 {
     //vertex texture coordinates assigned by the index of the vertex
      var indices = [ a, b, c, a, c, d ];
-    var texind  = [ 1, 2, 3, 1, 3, 2 ];
+    var texind  = [ 1, 0, 3, 1, 3, 2 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
         this.t_points.push( this.vertices[indices[i]]  );

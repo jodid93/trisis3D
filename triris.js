@@ -364,15 +364,7 @@ var proLoc;
 var mvLoc;
 var gildi = 0;
 
-/*var lightPosition = vec4(1.0, 3.0, 1.0, 0.0 );
-var lightAmbient = vec4(1.0, 1.0, 1.0, 1.0 );
-var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
-var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
-var materialAmbient = vec4( 0.19225,  0.19225,  0.19225, 1.0 );
-var materialDiffuse = vec4( 0.50754, 0.50754, 0.50754, 1.0 );
-var materialSpecular = vec4( 0.508273, 0.508273, 0.508273, 1.0 );
-var materialShininess = 51.2;*/
 
 var lightPosition = vec4( 0.0, 10000.0, -25.0, 0.0);
 var lightAmbient = vec4(1.0, 1.0, 1.0, 1.0 );
@@ -454,11 +446,11 @@ window.onload = function init()
                 spinX = ( spinX + (origY - e.offsetY) ) % 360;
 
                 //so you are not able to see outside of our skybox
-                /*if(spinX > 10){
+                if(spinX > 10){
                     spinX = 10;
                 }else if(spinX <-180){
                     spinX = -180;
-                }*/
+                }
                 origX = e.offsetX;
                 origY = e.offsetY;
                 //console.log(spinX)
