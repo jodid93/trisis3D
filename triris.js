@@ -96,6 +96,8 @@ function updateSimulation(du) {
         initializeLineMode();
     }
 
+
+
     /* SPURJA GOGGA HVAD THETTA ER!!!
     if(  eatKey( KEY_UP ) ){ //UP
         ppos[0] += step*lookdir[0];
@@ -212,6 +214,8 @@ function checkForFumble(du){
     }
 }
 
+
+
 //clearFloor clears a floor that has all it's values in Playfield marked as True
 function clearFloor(u,du){
     //go through all the blocks to mark the blocks that share in the marked floor
@@ -265,9 +269,14 @@ function clearFloor(u,du){
             playField[kubbar[i].location3[0]][kubbar[i].location3[1]][kubbar[i].location3[2]] = true;
         }
     }
+
+  
+    
 }
-
-
+var x=0;
+var y = 0;
+var z = 0;
+var reverse = false;
 //
 // GLOBAL VARIABLES (mainly used for the graphics)
 //
@@ -340,6 +349,29 @@ var zDist = -5.0;
 
 var proLoc;
 var mvLoc;
+var gildi = 0;
+
+/*var lightPosition = vec4(1.0, 3.0, 1.0, 0.0 );
+var lightAmbient = vec4(1.0, 1.0, 1.0, 1.0 );
+var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
+var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+var materialAmbient = vec4( 0.19225,  0.19225,  0.19225, 1.0 );
+var materialDiffuse = vec4( 0.50754, 0.50754, 0.50754, 1.0 );
+var materialSpecular = vec4( 0.508273, 0.508273, 0.508273, 1.0 );
+var materialShininess = 51.2;*/
+
+var lightPosition = vec4( 0.0, 10000.0, -25.0, 0.0);
+var lightAmbient = vec4(1.0, 1.0, 1.0, 1.0 );
+var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
+var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+
+var materialAmbient = vec4( 0.5, 0.5, 0.5, 1.0 );
+var materialDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
+var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
+var materialShininess = 1000.0;
+
+var ambientColor, diffuseColor, specularColor;
 
 window.onload = function init()
 {
@@ -368,14 +400,23 @@ window.onload = function init()
     initializeTextureMode();
 
 
-    proLoc = gl.getUniformLocation( program, "projection" );
-    mvLoc = gl.getUniformLocation( program, "modelview" );
+    //proLoc = gl.getUniformLocation( program, "projection" );
+    //mvLoc = gl.getUniformLocation( program, "modelview" );
 
     var drMode = gl.getUniformLocation( program, "drawMode" );
     gl.uniform2fv( drMode, flatten(vec2(1.0, 0.0)) );
     
+
+    var ambientProduct = mult(lightAmbient, materialAmbient);
+    var diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    var specularProduct = mult(lightSpecular, materialSpecular);
     
 
+    gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct) );
+    gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct) );
+    gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct) );   
+    gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
+    gl.uniform1f( gl.getUniformLocation(program, "shininess"), materialShininess );
     //
     // INITIALIZE LISTENERS
     //
@@ -399,11 +440,11 @@ window.onload = function init()
                 spinX = ( spinX + (origY - e.offsetY) ) % 360;
 
                 //so you are not able to see outside of our skybox
-                if(spinX > 10){
+                /*if(spinX > 10){
                     spinX = 10;
                 }else if(spinX <-180){
                     spinX = -180;
-                }
+                }*/
                 origX = e.offsetX;
                 origY = e.offsetY;
                 //console.log(spinX)
@@ -430,13 +471,18 @@ window.onload = function init()
     
     // Event listener for mousewheel
      window.addEventListener("mousewheel", function(e){
-            if( e.wheelDelta > 0.0 ) {
-                ppos[2] += 1.1;
-                zDist += 1.1;
+           /* if( e.wheelDelta > 0.0 ) {
+                
+                gildi += 0.1;
+                lightPosition = vec4(0.0, gildi, 0.0, 0.0 );
             } else {
-                ppos[2] -= 1.1;
-                zDist -= 1.1;
+                
+                gildi -= 0.1;
+                lightPosition = vec4(0.0, gildi, 0.0, 0.0 );
             }
+            gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
+            console.log(gildi)*/
+
         });
     var start = vertices.cubeIndex.start;
     var count = vertices.cubeIndex.count;
@@ -546,6 +592,13 @@ function initializeTextureMode(){
     gl.vertexAttribPointer( vTexCoord, 2, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vTexCoord );
 
+    
+
+    var vNormal = gl.getAttribLocation( program, "vNormal" );
+    gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vNormal);
+    
+
     var drMode = gl.getUniformLocation( program, "drawMode" );
     gl.uniform2fv( drMode, flatten(vec2(1.0, 0.0)) );
 
@@ -577,6 +630,10 @@ function initializeLineMode(){
     var vColor = gl.getAttribLocation( program, "vColor" );
     gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vColor );
+
+    var vNormal = gl.getAttribLocation( program, "vNormal" );
+    gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vNormal);
 
     kassi = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, kassi);
@@ -620,9 +677,10 @@ function scale4( x, y, z )
 
 //teikna skjámynd
 function render()
-{
+{   
+    
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+    
     var ctmStack = [];
     var proj = perspective( 50.0, 1.0, 0.2, 100.0 );
     gl.uniformMatrix4fv(proLoc, false, flatten(proj));
@@ -637,7 +695,6 @@ function render()
     ctm = mult( ctm, rotate( parseFloat(spinY), [0, 1, 0] ) );
     ctm = mult( ctm, scale4(0.3,0.3,0.3));
     
-
 
     //RENDER WORLD
     ctmStack.push( ctm );
@@ -676,7 +733,13 @@ function render()
 
 
     //RENDER CUBES
+
     for(var i = 0; i<kubbar.length; i++){
+        ctmStack.push(ctm);
         kubbar[i].render(ctm, mvLoc);
+        ctm = ctmStack.pop();
     }
+    
+
+    
 }
