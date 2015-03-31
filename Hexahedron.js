@@ -204,6 +204,24 @@ Hexahedron.prototype.getVertices = function(  ){
             vec3( -x,  y, -z ),   //5
             vec3(  x,  y, -z ),   //6
             vec3(  x, -y, -z )];  //7
+
+
+
+    return [vec3( -x,  y,  z ),   //0
+            vec3( -x, -y,  z ),   //1
+            vec3(  x, -y,  z ),   //2
+            vec3(  x,  y,  z ),   //3
+            vec3( -x,  y, -z ),   //4
+            vec3( -x, -y, -z ),   //5
+            vec3(  x, -y, -z ),   //6
+            vec3(  x,  y, -z )];  //7
+
+
+    return [vec3(-x, y, z), //0
+            vec3(-x,-y, z), //1
+            vec3( x,-y, z), //2
+            vec3( x, y, z)];//3
+
 };
 
 Hexahedron.prototype.getColorTex = function( drawMode ){

@@ -107,20 +107,16 @@ Square.prototype.insert = function( indices ){
 
                       
 Square.prototype.buildTextureSquare = function(){
-    this.quad( 1, 0, 3, 2);
-};
-/*
-
-Square.prototype.buildTextureSquare = function(){
     this.quad( 0, 1, 2, 3);
 };
-*/
+
 
 Square.prototype.quad = function(a, b, c, d) 
 {
     //vertex texture coordinates assigned by the index of the vertex
-     var indices = [ a, b, c, a, c, d ];
-    var texind  = [ 1, 2, 3, 1, 3, 2 ];
+    var indices = [ a, b, c, c, d, a ];
+    //var texind  = [ 1, 0, 3, 1, 2, 3 ];
+    var texind  = [ 1, 2, 3, 3, 0, 1 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
         this.t_points.push( this.vertices[indices[i]]  );
@@ -154,10 +150,10 @@ Square.prototype.getVertices = function(  ){
     var y = this.yAxisSize;
     var z = this.zAxisSize;
     
-    return [vec3(-x,-y, z), //0
-            vec3(-x, y, z), //1
-            vec3( x, y, z), //2
-            vec3( x,-y, z)];//3
+    return [vec3(-x, y, z), //0
+            vec3(-x,-y, z), //1
+            vec3( x,-y, z), //2
+            vec3( x, y, z)];//3
 };
 
 //return a color red

@@ -219,7 +219,7 @@ var vertices = {
 	        xAxisSize: 50.0,
 	        yAxisSize: 50.0,
 	        zAxisSize: 0.0,
-	        texCopies: 30
+	        texCopies: 10
 		}), "groundSurface");
 	},
 

@@ -194,7 +194,7 @@ main.requestPreloads = function() {
         wallpz   : "images/dark-s_pz.jpg",   
         grid   : "images/shells-10.jpg",
         stone1   : "images/stone-02.jpg",
-        texTile1 : "images/woodtile27.jpg",
+        texTile1 : "images/surface.jpg",//"images/woodtile27.jpg",
         gameOver: "images/gameOver.jpg"
     };
     //

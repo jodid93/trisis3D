@@ -1,7 +1,6 @@
 <html>
 
 <head>
-<<<<<<< HEAD
     <meta charset="utf-8">
     <title>HANGING MOBILE</title>
         <style>
@@ -170,11 +169,11 @@
             vec4 fColor = ambient + diffuse + specular;
             fColor.a = 1.0;
             vec4 color = vec4( fColor * texture2D( texture1, fTexCoord ) );
-            if( draMode[0] == 1.0 ){
-                if( color.r + color.g + color.b < 0.1 ){
+            //if( draMode[0] == 1.0 ){
+                if( color.r + color.g + color.b < 0.2 ){
                     discard;
                 }
-            }
+            //}
             gl_FragColor = color;
                 
 
