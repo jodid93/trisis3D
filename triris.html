@@ -1,6 +1,7 @@
 <html>
 
 <head>
+<<<<<<< HEAD
     <meta charset="utf-8">
     <title>HANGING MOBILE</title>
         <style>
@@ -86,52 +87,100 @@
         </style>
 
         <script id="vertex-shader" type="x-shader/x-vertex">
-            attribute  vec4 vPosition;
-            attribute  vec4 vColor;
-            attribute  vec2 vTexCoord;
 
-            varying vec4 fColor;
-            varying vec2 fTexCoord;
+        /*attribute  vec4 vColor;
+        varying vec4 fColor;*/
+        //precision mediump float;
 
-            uniform mat4 projection;
-            uniform mat4 modelview;
+        attribute  vec2 vTexCoord;
+        varying vec2 fTexCoord;
 
-            void main() 
-            {
-                fTexCoord = vTexCoord;
-                fColor = vColor;
-                gl_PointSize = 1.0;
-                gl_Position = projection * modelview * vPosition;
-            } 
+
+        attribute  vec4 vPosition;
+        attribute  vec3 vNormal;
+        varying vec3 N, L, E;
+        uniform mat4 modelview;
+        uniform mat4 projection;
+        uniform vec4 lightPosition;
+
+
+        void main() 
+        {    
+
+
+            vec3 pos = (modelview * vPosition).xyz;
+
+            N = normalize( modelview*vec4(normalize(vNormal), 0.0) ).xyz;
+            E = normalize( -pos );
+            L = normalize( lightPosition.xyz - pos );
+            
+            gl_Position = projection*modelview*vPosition;
+            fTexCoord = vTexCoord;
+            
+
+
+        } 
         </script>
 
         <script id="fragment-shader" type="x-shader/x-fragment">
-            precision mediump float;
 
-            varying vec4 fColor;
+        precision mediump float;
+        varying vec3 N, L, E;
+        varying vec2 fTexCoord;
 
-            varying vec2 fTexCoord;
 
-            uniform sampler2D texture1;
-            uniform vec2 draMode;
+        uniform vec4 ambientProduct;
+        uniform vec4 diffuseProduct;
+        uniform vec4 specularProduct;
+        //uniform vec4 lightPosition;
+        uniform float shininess;
 
-            void main()
-            {	
-                if( draMode[0] == 1.0 ){
-                    vec4 color1  = texture2D( texture1, fTexCoord ); 
-                    if( color1.r + color1.g + color1.b < 0.2 ){
+        varying vec4 fColor;
 
-                   	 discard;
-                    }
-                	else{
 
-                    	gl_FragColor = color1;
-                	}
-                } else {
-                    gl_FragColor = fColor;
+        uniform sampler2D texture1;
+        uniform vec2 draMode;
+
+        void main()
+        {   
+
+            
+
+            // Normalize the input lighting vectors
+            vec3 fN = normalize(N);
+            vec3 fE = normalize(E);
+            vec3 fL = normalize(L);
+
+
+            vec3 H = normalize( fL + fE );
+            
+            vec4 ambient = ambientProduct;
+
+            float Kd = max(dot(fL, fN), 0.0);
+            vec4 diffuse = Kd*diffuseProduct;
+            
+            float Ks = pow(max(dot(fN, H), 0.0), shininess);
+            vec4 specular = Ks*specularProduct;
+
+            // discard the specular highlight if the light's behind the vertex
+            if( dot(fL, fN) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+
+            vec4 fColor = ambient + diffuse + specular;
+            fColor.a = 1.0;
+            vec4 color = fColor * texture2D( texture1, fTexCoord );
+            if( draMode[0] == 1.0 ){
+                if( color1.r + color1.g + color1.b < 0.1 ){
+                    discard;
                 }
             }
+            gl_FragColor = color
+                
+
+        }
         </script>
+
 
 
 

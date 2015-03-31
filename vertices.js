@@ -43,6 +43,7 @@ var vertices = {
 	    } else
 	    if( drawMode === gl.TRIANGLES ){
 	        points_t = points.concat( this.shape.t_points );
+
 	        texCoords_t = texCoords.concat( this.shape.t_textur );
 	    }
 	},
@@ -334,13 +335,14 @@ var vertices = {
 		var start = this.groundIndex.start;
 		var count = this.groundIndex.count;
 
-        ctm = mult( ctm, translate([0.0, -3.35, 0.0]));
+        ctm = mult( ctm, translate([0.0, -3.39, 0.0]));
         ctm = mult( ctm, scale4( 1.2, 1.0, 1.2));
         ctm = mult( ctm, rotate( 90, [ 1, 0, 0]));
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));   
     	
     	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
+    	console.log(start, count)
 		gl.drawArrays(drawMode, start, count);
 	},
 
@@ -402,7 +404,7 @@ var vertices = {
 		var start = this.groundSurfaceIndex.start;
 		var count = this.groundSurfaceIndex.count;
 
-		ctm = mult( ctm, translate([0.0, -3.9, 0.0]));
+		ctm = mult( ctm, translate([0.0, -3.95, 0.0]));
 		ctm = mult( ctm, rotate(90, [1.0, 0.0, 0.0]));
 
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));

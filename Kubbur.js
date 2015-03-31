@@ -24,6 +24,7 @@ Kubbur.prototype.block1Alive = true;
 Kubbur.prototype.block2Alive = true;
 Kubbur.prototype.block3Alive = true;
 
+
 //CONSTANT
 
 //update the cube
@@ -660,7 +661,6 @@ Kubbur.prototype.update = function (du) {
     //check for movements. this works in the same way as the checks above
     if(keys[left]&& this.active){
 
-        console.log("A")
         if(this.location1[0]-1 >= 0 && this.location2[0]-1 >= 0 && this.location3[0]-1 >= 0&&
             playField[this.location1[0]-1][this.location1[1]][this.location1[2]] === false&&
             playField[this.location2[0]-1][this.location2[1]][this.location2[2]] === false&&

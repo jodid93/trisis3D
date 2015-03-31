@@ -109,21 +109,44 @@ Square.prototype.insert = function( indices ){
 Square.prototype.buildTextureSquare = function(){
     this.quad( 1, 0, 3, 2);
 };
+/*
 
+Square.prototype.buildTextureSquare = function(){
+    this.quad( 0, 1, 2, 3);
+};
+*/
 
 Square.prototype.quad = function(a, b, c, d) 
 {
     //vertex texture coordinates assigned by the index of the vertex
      var indices = [ a, b, c, a, c, d ];
-    var texind  = [ 1, 0, 3, 1, 3, 2 ];
+    var texind  = [ 1, 2, 3, 1, 3, 2 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
         this.t_points.push( this.vertices[indices[i]]  );
         this.t_textur.push( this.t_textures[texind [i]]);
+
     }
     
     this.texturN++; //gerir ekki neitt
 };
+/*
+Square.prototype.quad = function(a, b, c, d) 
+{
+    //vertex texture coordinates assigned by the index of the vertex
+     var indices = [ a, b, c, d];
+    var texind  = [ a, b, c, d];
+
+    for ( var i = 0; i < indices.length; ++i ) {
+        this.t_points.push( this.vertices[indices[i]]  );
+        this.t_textur.push( this.t_textures[texind [i]]);
+
+    }
+    
+    this.texturN++; //gerir ekki neitt
+};*/
+
+
 
 
 Square.prototype.getVertices = function(  ){
@@ -146,7 +169,8 @@ Square.prototype.getColor = function( ){
 //return a texture coordinate of a square
 Square.prototype.getTexture = function( ){  
     console.log("this.texCopies: " + this.texCopies)  
-    return [vec2(0, 0), vec2(0, this.texCopies),
-            vec2(this.texCopies, this.texCopies), 
-            vec2(this.texCopies, 0)];
+    return [vec2(0, 0),                         //0
+            vec2(0, this.texCopies),            //1
+            vec2(this.texCopies, this.texCopies),//2 
+            vec2(this.texCopies, 0)];               //3
 };

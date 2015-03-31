@@ -43,6 +43,12 @@ var P = keyCode('P');
 var G = keyCode('G');
 var M = keyCode('M'); //change look view
 
+var I = keyCode('I');
+var O = keyCode('O');
+var L = keyCode('L');
+var T = keyCode('G');
+
+
 var KEY_T = keyCode('T');
 var KEY_L = keyCode('L');
 

@@ -175,8 +175,17 @@ Hexahedron.prototype.quad = function(a, b, c, d)
     var texind  = [ 1, 0, 3, 1, 3, 2 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
+        
+        //var bla = (cloneObject(this.vertices[indices[i]]));
+
         this.t_points.push( this.vertices[indices[i]] );
         this.t_textur.push( this.t_textures[texind [i]] );
+
+        /*console.log(this.vertices[indices[i]]);
+        var bla =  this.vertices[indices[i]];
+        var ab = vec4(bla[0], bla[1], bla[2],1.0);
+        ab = normalize( ab, true);
+        normalsArray.push(ab[0],ab[1], ab[2],0.0);*/
     }
     this.texturN++; //gerir ekki neitt
 };
