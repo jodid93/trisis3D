@@ -166,12 +166,15 @@
             fColor.a = 1.0;
 
             vec4 color = vec4(fColor * texture2D( texture1, fTexCoord ));
-           // if( draMode[0] == 1.0 ){
+           if( draMode[0] == 1.0 ){
                 if( color.r + color.g + color.b < 0.27 ){
                     discard;
-                }else{gl_FragColor = color;}
-            //}
-            //gl_FragColor = color;
+                }else{
+                    gl_FragColor = color;
+                }
+            } else {
+                gl_FragColor = fColor;
+            }
 
         }
         </script>

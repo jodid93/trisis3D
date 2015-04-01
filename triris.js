@@ -96,7 +96,7 @@ function updateSimulation(du) {
 
     if( eatKey( KEY_ENTER ) ) {
         startGame = true;
-        startIntro = true;
+       // startIntro = true;
         initializeTextureMode();
     }
 
@@ -301,7 +301,7 @@ var texCoords_t;
 
 var drawMode;
 
-var startGame = true;
+var startGame = false;
 var gameOver = false;
 
 var xAxis = 0;
@@ -402,8 +402,8 @@ window.onload = function init()
     //
   //  textures = texture.convertImagesToTexture( g_images );
 
-    initializeTextureMode();
-    //initializeLineMode();
+    //initializeTextureMode();
+    initializeLineMode();
 
     textures = texture.convertImagesToTexture( g_images );
 
@@ -413,16 +413,6 @@ window.onload = function init()
     //gl.uniform2fv( drMode, flatten(vec2(0.0, 1.0)) );
     
 
-    var ambientProduct = mult(lightAmbient, materialAmbient);
-    var diffuseProduct = mult(lightDiffuse, materialDiffuse);
-    var specularProduct = mult(lightSpecular, materialSpecular);
-    
-
-    gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct) );
-    gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct) );   
-    gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
-    gl.uniform1f( gl.getUniformLocation(program, "shininess"), materialShininess );
     //
     // INITIALIZE LISTENERS
     //
@@ -606,6 +596,19 @@ function initializeLocation(){
     mvLoc = gl.getUniformLocation( program, "modelview" );
 }
 
+function initializeLight(){
+    var ambientProduct = mult(lightAmbient, materialAmbient);
+    var diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    var specularProduct = mult(lightSpecular, materialSpecular);
+    
+
+    gl.uniform4fv( gl.getUniformLocation(program, "ambientProduct"), flatten(ambientProduct) );
+    gl.uniform4fv( gl.getUniformLocation(program, "diffuseProduct"), flatten(diffuseProduct) );
+    gl.uniform4fv( gl.getUniformLocation(program, "specularProduct"), flatten(specularProduct) );   
+    gl.uniform4fv( gl.getUniformLocation(program, "lightPosition"), flatten(lightPosition) );
+    gl.uniform1f( gl.getUniformLocation(program, "shininess"), materialShininess );
+}
+
 //balic
 function initializeTextureMode(){
     
@@ -619,7 +622,6 @@ function initializeTextureMode(){
     // CREATE MAP
     //
     vertices.build();
-
     //
     // INITIALIZE BUFFERS
     //
@@ -645,11 +647,11 @@ function initializeTextureMode(){
     gl.enableVertexAttribArray( vNormal);
     
 
-    var drMode = gl.getUniformLocation( program, "drawMode" );
-
-    gl.uniform2fv( drMode, flatten(vec2(1.0, 0.0)) );
+    var draMode = gl.getUniformLocation( program, "draMode" );
+    gl.uniform2fv( draMode, flatten(vec2(1.0, 0.0)) );
 
     initializeLocation();
+    initializeLight();
 }
 
 
@@ -704,6 +706,8 @@ function initializeLineMode(){
     var drMode = gl.getUniformLocation( program, "draMode" );
     gl.uniform2fv( drMode, flatten(vec2(0.0, 1.0)) );
 
+
+    initializeLight();
     initializeLocation();
 }
 
@@ -765,7 +769,7 @@ function render()
         ctm1 = ctmStack.pop();
 
     } else if (startGame && !gameOver){
-
+        console.log( "hllo");
         // staðsetja áhorfanda og meðhöndla músarhreyfingu
         if(look){
             var ctm = lookAt( vec3(0.0, 0.0, zDist), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0) );    
@@ -808,7 +812,9 @@ function render()
 
         //RENDER CUBES
         for(var i = 0; i<kubbar.length; i++){
+            ctmStack.push(ctm);
             kubbar[i].render(ctm, mvLoc);
+            ctm = ctmStack.pop();
         }
     }
     else if ( gameOver ){
@@ -821,13 +827,6 @@ function render()
         ctm = ctmStack.pop();
     }
 
-    //RENDER CUBES
-
-    for(var i = 0; i<kubbar.length; i++){
-        ctmStack.push(ctm);
-        kubbar[i].render(ctm, mvLoc);
-        ctm = ctmStack.pop();
-    }
     
 
 }

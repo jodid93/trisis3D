@@ -21,11 +21,11 @@ var vertices = {
     	}
     	else {
     		console.log( "hallo" );
+	    	this.cubeIndex = this.makeCube(  );
     		this.plankIndex = this.makePlank();
 	    	this.groundSurfaceIndex = this.makeGroundSurface( );
 	    	this.worldIndex = this.makeWorld( );
 			this.gridIndex = this.makeGrid( );
-	    	this.cubeIndex = this.makeCube(  );
 	    	this.groundIndex = this.makeGround( );
 	    	this.pointGridIndex = this.makePointGrid( );
     	}
@@ -410,7 +410,7 @@ var vertices = {
 		gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm));
 
     	gl.bindTexture(gl.TEXTURE_2D, textures[14]);
-		gl.drawArrays(drawMode, start, count);
+		gl.drawArrays(gl.TRIANGLES, start, count);
 		
 	}
 };

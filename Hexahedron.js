@@ -175,17 +175,8 @@ Hexahedron.prototype.quad = function(a, b, c, d)
     var texind  = [ 1, 0, 3, 1, 3, 2 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
-        
-        //var bla = (cloneObject(this.vertices[indices[i]]));
-
         this.t_points.push( this.vertices[indices[i]] );
         this.t_textur.push( this.t_textures[texind [i]] );
-
-        /*console.log(this.vertices[indices[i]]);
-        var bla =  this.vertices[indices[i]];
-        var ab = vec4(bla[0], bla[1], bla[2],1.0);
-        ab = normalize( ab, true);
-        normalsArray.push(ab[0],ab[1], ab[2],0.0);*/
     }
     this.texturN++; //gerir ekki neitt
 };
@@ -204,24 +195,6 @@ Hexahedron.prototype.getVertices = function(  ){
             vec3( -x,  y, -z ),   //5
             vec3(  x,  y, -z ),   //6
             vec3(  x, -y, -z )];  //7
-
-
-
-    return [vec3( -x,  y,  z ),   //0
-            vec3( -x, -y,  z ),   //1
-            vec3(  x, -y,  z ),   //2
-            vec3(  x,  y,  z ),   //3
-            vec3( -x,  y, -z ),   //4
-            vec3( -x, -y, -z ),   //5
-            vec3(  x, -y, -z ),   //6
-            vec3(  x,  y, -z )];  //7
-
-
-    return [vec3(-x, y, z), //0
-            vec3(-x,-y, z), //1
-            vec3( x,-y, z), //2
-            vec3( x, y, z)];//3
-
 };
 
 Hexahedron.prototype.getColorTex = function( drawMode ){

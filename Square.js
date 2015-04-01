@@ -107,6 +107,7 @@ Square.prototype.insert = function( indices ){
 
                       
 Square.prototype.buildTextureSquare = function(){
+    //this.quad( 1, 0, 3, 2);
     this.quad( 0, 1, 2, 3);
 };
 
@@ -114,36 +115,28 @@ Square.prototype.buildTextureSquare = function(){
 Square.prototype.quad = function(a, b, c, d) 
 {
     //vertex texture coordinates assigned by the index of the vertex
+     //var indices = [ a, b, c, a, c, d ];
+    
     var indices = [ a, b, c, c, d, a ];
-    var texind  = [ 1, 0, 3, 1, 2, 3 ];
-    //var texind  = [ 1, 2, 3, 3, 0, 1 ];
+    var texind  = [ 0, 1, 2, 2, 3, 0 ]; //Gameover logo virkar og phong
+    //var texind  = [ a, b, c, a, d, c ]; //virkar (ekki gameover logo)
+    //var texind  = [ 0, 1, 2, 0, 3, 2 ]; //virkar (ekki gameover logo)
+    
+    
 
+
+   // var texind  = [ 1, 0, 3, 1, 2, 3 ];
+    //var texind  = [ 0, 3, 1, 1, 2, 3 ];
+    //var texind  = [ 1, 2, 1, 1, 2, 3 ];
+    //var texind  = [ 1, 0, 3, 1, 3, 2 ];
 
     for ( var i = 0; i < indices.length; ++i ) {
         this.t_points.push( this.vertices[indices[i]]  );
         this.t_textur.push( this.t_textures[texind [i]]);
-
     }
     
     this.texturN++; //gerir ekki neitt
 };
-/*
-Square.prototype.quad = function(a, b, c, d) 
-{
-    //vertex texture coordinates assigned by the index of the vertex
-     var indices = [ a, b, c, d];
-    var texind  = [ a, b, c, d];
-
-    for ( var i = 0; i < indices.length; ++i ) {
-        this.t_points.push( this.vertices[indices[i]]  );
-        this.t_textur.push( this.t_textures[texind [i]]);
-
-    }
-    
-    this.texturN++; //gerir ekki neitt
-};*/
-
-
 
 
 Square.prototype.getVertices = function(  ){
@@ -151,10 +144,12 @@ Square.prototype.getVertices = function(  ){
     var y = this.yAxisSize;
     var z = this.zAxisSize;
     
-    return [vec3(-x, y, z), //0
+    return [
+            vec3(-x, y, z), //0
             vec3(-x,-y, z), //1
             vec3( x,-y, z), //2
-            vec3( x, y, z)];//3
+            vec3( x, y, z), //3
+            ];
 };
 
 //return a color red
@@ -166,8 +161,10 @@ Square.prototype.getColor = function( ){
 //return a texture coordinate of a square
 Square.prototype.getTexture = function( ){  
     console.log("this.texCopies: " + this.texCopies)  
-    return [vec2(0, 0),                         //0
-            vec2(0, this.texCopies),            //1
-            vec2(this.texCopies, this.texCopies),//2 
-            vec2(this.texCopies, 0)];               //3
+    return [
+            vec2(0, this.texCopies),
+            vec2(0, 0), 
+            vec2(this.texCopies, 0),
+            vec2(this.texCopies, this.texCopies)
+            ];
 };
