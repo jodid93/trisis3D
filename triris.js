@@ -34,7 +34,8 @@ function geraKubb( drawArrayIndex ) {
     }
 };
 
-
+var Scorehtml;
+var levelhtml;
 //function to update all the game locic. engine.js calls this function
 function updateSimulation(du) {
 
@@ -42,6 +43,8 @@ function updateSimulation(du) {
     //document.getElementById("Score").innerHTML = score;
     //document.getElementById("Level").innerHTML = level;
    
+    Scorehtml.innerHTML = score;
+    levelhtml.innerHTML = level;
 
    //initialize a new block if the game is restarted
    if(restart){
@@ -394,7 +397,8 @@ window.onload = function init()
         }
     }
 
-
+    Scorehtml = document.getElementById("score");
+    levelhtml =  document.getElementById("level");
 
     //
     // CONFIGURE TEXTURE

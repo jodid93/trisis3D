@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>HANGING MOBILE</title>
+    <title>Trisis</title>
         <style>
             body, html { 
                 background-color: gainsboro;/*#606060;*/
@@ -12,6 +12,11 @@
                 padding: 0px;
                 margin: 0px;
               }
+
+            ul{
+                width: 0.2em;
+            }
+
             #canvas {
                 border: "1px solid black";
                 width: 100%;
@@ -29,37 +34,54 @@
             }
             #nav {
                 font-family: Impact, Charcoal, sans-serif;
+                font-size: 1%;
                 line-height:30px;
                 background-color:lightgray;
                 opacity:0.6;
                 position:absolute;
                 top: 15%;
-                width:10%;
+                width:13%;
                 padding:5px; 
             }
 
             #nav2 {
                 font-family: Impact, Charcoal, sans-serif;
+                font-size: small;
                 line-height:30px;
                 background-color:lightgray;
                 opacity:0.6;
                 top: 35%;
                 position:absolute;
-                width:10%;
+                width:13%;
                 padding:5px; 
             }
 
             #nav3 {
                 font-family: Impact, Charcoal, sans-serif;
+                font-size: small;
                 line-height:30px;
                 background-color:lightgray;
                 opacity:0.6;
                 top: 65%;
                 position:absolute;
+                width:13%;
+                padding:5px; 
+            }
+
+            #nav4 {
+                font-family: Impact, Charcoal, sans-serif;
+                font-size: small;
+                line-height:30px;
+                background-color:lightgray;
+                opacity:0.6;
+                top: 5%;
+                left:89%;
+                position:absolute;
                 width:10%;
                 padding:5px; 
             }
 
+            
 
             #game {
                 border-style: ridge;
@@ -83,6 +105,11 @@
                 width:25%;
                 padding:5px; 
             }
+
+            .right {
+                float: right;
+            }   ​
+
         </style>
 
         <script id="vertex-shader" type="x-shader/x-vertex">
@@ -209,11 +236,13 @@
 </head>   
 
 
+
 <body>
 
     <canvas id="canvas"  width="512" height="512">
     Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
+    
 
     <div id="nav">
         <table style="width:100%">
@@ -284,6 +313,22 @@
             <td>Byrja uppá nýtt</td>
           </tr>
         </table>
+    </div>
+
+
+    <div id="nav4">
+        <table style="width:100%">
+               <ul> 
+                <tr>
+                    <td>Your level is:<span class="right" id="level"></span></td>
+                 </tr>
+                 </ul>
+                 <ul>
+                 <tr>
+                    
+                    <td>Your score is:<span class="right" id="score"></span></td>
+                 </tr>
+                 </ul>
     </div>
 
     </dev>
