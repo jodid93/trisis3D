@@ -240,6 +240,6 @@ function audioPreloadDone() {
 	for(var sound in g_sounds) {
 		g_audio[sound] = new Sound(g_sounds[sound], sound);
 	}
-	//g_audio.theme.playSound();
+	g_audio.theme.playSound();
 }
 

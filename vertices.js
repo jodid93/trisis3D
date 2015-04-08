@@ -9,6 +9,7 @@ var vertices = {
 	pointGridIndex: null,	
 	groundSurfaceIndex: null,	
 	plankIndex: null,
+	tungl: null,
 
 	startScreenIndex: null,
 	startTextIndex: null,
@@ -43,8 +44,8 @@ var vertices = {
 	    } else
 	    if( drawMode === gl.TRIANGLES ){
 	        points_t = points.concat( this.shape.t_points );
-
-	        texCoords_t = texCoords.concat( this.shape.t_textur );
+			texCoords_t = texCoords.concat( this.shape.t_textur );
+	    	
 	    }
 	},
 
@@ -127,6 +128,8 @@ var vertices = {
             zAxisSize: 1.5
 	    }), "grid");
 	},
+
+	
 
 	makePointGrid: function( ){
 	    var storePoints = [];
@@ -308,6 +311,8 @@ var vertices = {
 	
 		var start1 = this.gridIndex.start;
 		var count1 = this.gridIndex.count;
+
+		//console.log('herna',start1, count1)
 		//draw a outlined structure of the grid
 		if( GRID_ONE ){
 			gl.drawArrays(gl.LINES, start1, count1);
@@ -330,11 +335,11 @@ var vertices = {
 			gl.drawArrays(gl.POINTS, start2, count2);
 		}
 	},
-
 	renderGround: function( ctm, matrixLoc){
 		var start = this.groundIndex.start;
 		var count = this.groundIndex.count;
-
+		var ctm1;
+		var ctm2;
         ctm = mult( ctm, translate([0.0, -3.39, 0.0]));
         ctm = mult( ctm, scale4( 1.2, 1.0, 1.2));
         ctm = mult( ctm, rotate( 90, [ 1, 0, 0]));
@@ -344,7 +349,10 @@ var vertices = {
     	gl.bindTexture(gl.TEXTURE_2D, textures[1]);
   
 		gl.drawArrays(drawMode, start, count);
+
+		
 	},
+
 
 	renderPlank: function( ctm, matrixLoc, rotationY){
 		var start = this.plankIndex.start;
@@ -403,6 +411,7 @@ var vertices = {
 	renderGroundSurface: function( ctm, matrixLoc ){
 		var start = this.groundSurfaceIndex.start;
 		var count = this.groundSurfaceIndex.count;
+		//console.log(start, count)
 
 		ctm = mult( ctm, translate([0.0, -3.95, 0.0]));
 		ctm = mult( ctm, rotate(90, [1.0, 0.0, 0.0]));

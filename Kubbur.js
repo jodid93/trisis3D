@@ -875,7 +875,7 @@ Kubbur.prototype.draw = function(ctm, matrixLoc,x,y,z,index){
     var count = vertices.cubeIndex.count;
     
     ctm1 = mult( ctm, translate( [x, y, z] ) );
-
+    
     gl.uniformMatrix4fv(matrixLoc, false, flatten(ctm1)); 
 
     gl.bindTexture(gl.TEXTURE_2D, textures[index]);

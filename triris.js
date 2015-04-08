@@ -102,7 +102,6 @@ function updateSimulation(du) {
 
 
    /* if(  eatKey( KEY_UP ) ){ //UP
-
         ppos[0] += step*lookdir[0];
         ppos[2] += step*lookdir[2];
     }
@@ -695,7 +694,6 @@ function initializeLineMode(){
    /* cBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(colors_l), gl.STATIC_DRAW );
-
     var vColor = gl.getAttribLocation( program, "vColor" );
     gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vColor );*/
